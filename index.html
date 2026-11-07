@@ -269,14 +269,14 @@ render();
 var DB='https://matchmaker-28187-default-rtdb.asia-southeast1.firebasedatabase.app/vb_festival/rooms';
 var EDIT=/[?&]edit\b/.test(location.search);
 var R=LS.get('vbf_rooms',{});
-function renderRooms(){var h='';for(var i=1;i<=5;i++){var r=R[i]||{},nums=(r.n||'').split(/[ ,]+/).filter(Boolean);
+function renderRooms(){var h='';for(var i=1;i<=6;i++){var r=R[i]||{},nums=(r.n||'').split(/[ ,]+/).filter(Boolean);
  if(EDIT)h+='<div class="rm"><div class="k">'+i+'호실</div><input data-rh="'+i+'" inputmode="numeric" maxlength="6" placeholder="호실" value="'+(r.h||'')+'"><input data-rn="'+i+'" inputmode="numeric" maxlength="24" placeholder="등번호 예: 5, 9" value="'+(r.n||'')+'"></div>';
  else h+='<div class="rm"><div class="k">'+i+'호실</div><div class="h'+(r.h?'':' e')+'">'+(r.h?r.h+'호':'(    )호')+'</div><div class="n'+(nums.length?'':' e')+'">'+(nums.length?nums.map(function(n){return '<i>'+n+'번</i>'}).join(''):'배정 전')+'</div></div>'}
  if(EDIT)h+='<button class="save" id="saveRooms">저장하기</button>';
  document.getElementById('rooms').innerHTML=h;
  if(EDIT)document.getElementById('saveRooms').onclick=saveRooms}
 function saveRooms(){var b=document.getElementById('saveRooms');b.textContent='저장 중...';var jobs=[];
- for(var i=1;i<=5;i++){var hv=document.querySelector('[data-rh="'+i+'"]').value.replace(/[^0-9A-Za-z-]/g,'').slice(0,6),nv=document.querySelector('[data-rn="'+i+'"]').value.replace(/[^0-9 ,]/g,'').slice(0,24);
+ for(var i=1;i<=6;i++){var hv=document.querySelector('[data-rh="'+i+'"]').value.replace(/[^0-9A-Za-z-]/g,'').slice(0,6),nv=document.querySelector('[data-rn="'+i+'"]').value.replace(/[^0-9 ,]/g,'').slice(0,24);
   R[i]={h:hv,n:nv,at:Date.now()};jobs.push(fetch(DB+'/'+i+'.json',{method:'PUT',body:JSON.stringify(R[i])}).then(function(r){if(!r.ok)throw 0}))}
  Promise.all(jobs).then(function(){LS.set('vbf_rooms',R);b.textContent='✅ 저장됐어요'}).catch(function(){b.textContent='⚠️ 저장 실패 · 다시 누르기'})}
 function loadRooms(d){if(d&&typeof d==='object'){R={};Object.keys(d).forEach(function(k){if(d[k])R[k]=d[k]});LS.set('vbf_rooms',R);if(!EDIT||!window._dirty)renderRooms()}}
