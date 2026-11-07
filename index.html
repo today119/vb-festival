@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>영종고 배구 축전</title>
+<meta name="description" content="제19회 전국학교스포츠클럽 축전 배구 여고부 · 인천영종고 일정·대진표·준비물">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏐</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#14306b;--blue:#2a5bd7;--sky:#e8f0ff;--orange:#ff7a1a;--soft:#fff4ea;--ink:#1d2433;--sub:#5b6577;--line:#d9e1ef;--bg:#f3f6fb;--card:#fff;--win:#e7f8ef;--wint:#0f7a4c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--navy:#9db8ff;--blue:#7aa2ff;--sky:#1d2a4a;--soft:#3a2614;--ink:#e8ecf4;--sub:#9aa5b8;--line:#2c3650;--bg:#0e1424;--card:#172038;--win:#123826;--wint:#6fe0a8}}
+:root[data-theme="dark"]{--navy:#9db8ff;--blue:#7aa2ff;--sky:#1d2a4a;--soft:#3a2614;--ink:#e8ecf4;--sub:#9aa5b8;--line:#2c3650;--bg:#0e1424;--card:#172038;--win:#123826;--wint:#6fe0a8}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:hidden}body{font-family:'Noto Sans KR',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.5;padding-bottom:40px}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px}
+header{background:linear-gradient(135deg,#14306b,#2a5bd7);color:#fff;padding:22px 0 18px}
+header .tag{display:inline-block;background:var(--orange);font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px}
+header h1{font-size:22px;font-weight:900;margin-top:8px;line-height:1.3}
+header p{font-size:13px;opacity:.9;margin-top:4px}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:6px;padding-top:8px;padding-bottom:8px}
+nav button{flex:1;border:0;background:var(--card);color:var(--sub);font:inherit;font-weight:700;font-size:14px;padding:10px 0;border-radius:12px;cursor:pointer}
+nav button.on{background:var(--blue);color:#fff}
+.tab{display:none}.tab.on{display:block}
+.card{background:var(--card);border-radius:18px;padding:18px;margin-top:14px;box-shadow:0 2px 8px rgba(20,48,107,.06)}
+h2{font-size:18px;font-weight:900;color:var(--navy);margin-bottom:10px}
+h3{font-size:15px;font-weight:900;margin:14px 0 6px}
+.row{display:flex;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:15px}
+.row:first-of-type{border-top:0}
+.row b{flex:0 0 72px;color:var(--blue)}
+.t{font-size:13px;color:var(--sub)}
+.hl{background:var(--soft);color:#c2410c;font-weight:700;padding:0 6px;border-radius:6px}
+.warn{background:#fff1f1;border:1.5px solid #ffb4b4;color:#b42318;border-radius:14px;padding:12px 14px;font-size:14px;margin-top:14px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .warn{background:#3a1616;border-color:#7a2a2a;color:#ffb4b4}}
+.day{display:flex;gap:12px;margin-top:14px}
+.dbox{flex:0 0 58px;background:#14306b;color:#fff;border-radius:14px;text-align:center;padding:8px 0;align-self:flex-start}
+.dbox .n{font-size:22px;font-weight:900;line-height:1.1}.dbox .w{font-size:13px}
+.dc{flex:1;background:var(--card);border-radius:16px;padding:12px 14px;box-shadow:0 2px 8px rgba(20,48,107,.06);min-width:0}
+.g{display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-top:1px dashed var(--line);font-size:14px}
+.g:first-of-type{border-top:0}
+.no{flex:0 0 auto;background:var(--orange);color:#fff;font-weight:700;border-radius:8px;padding:1px 7px;font-size:12px;margin-top:1px}
+.no.gr{background:#94a3b8}
+.us{color:var(--blue);font-weight:900}
+/* 시뮬레이터 */
+.grp{margin-top:14px}
+.gm{border-top:1px solid var(--line);padding:10px 0}
+.gm:first-of-type{border-top:0}
+.gm .hd{display:flex;justify-content:space-between;font-size:12px;color:var(--sub)}
+.gm .tm{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 8px;align-items:center;margin-top:4px}
+.gm .nm{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gm .nm.me{color:var(--blue)}
+.gm .nm.w{color:var(--wint)}
+.sets{display:flex;gap:4px}
+.sets input{width:38px;height:34px;padding:0;border:1.5px solid var(--line);border-radius:8px;text-align:center;font:inherit;font-size:15px;background:var(--bg);color:var(--ink)}
+.sets input:focus{outline:2px solid var(--blue);border-color:transparent}
+.qk{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+.qk button{border:1px solid var(--line);background:var(--bg);color:var(--sub);font:inherit;font-size:12px;padding:3px 9px;border-radius:99px;cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+th{color:var(--sub);font-weight:500;padding:5px 2px;border-bottom:1px solid var(--line)}
+td{text-align:center;padding:6px 2px;border-bottom:1px solid var(--line)}
+td.l{text-align:left;font-weight:700}
+tr.me td.l{color:var(--blue)}
+.rk{display:inline-block;min-width:22px;border-radius:6px;font-weight:900;font-size:12px;padding:1px 4px}
+.rk.q1{background:var(--orange);color:#fff}.rk.q2{background:var(--sky);color:var(--navy)}
+.ko{display:grid;gap:8px;margin-top:8px}
+.m{border:1.5px solid var(--line);border-radius:12px;overflow:hidden}
+.m .mh{font-size:12px;color:var(--sub);background:var(--bg);padding:4px 10px;display:flex;justify-content:space-between}
+.m button{display:flex;width:100%;border:0;border-top:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:14px;padding:9px 10px;text-align:left;cursor:pointer;gap:6px;align-items:center}
+.m button:first-of-type{border-top:0}
+.m button.w{background:var(--win);color:var(--wint);font-weight:900}
+.m button.w:after{content:'승';margin-left:auto;font-size:11px;background:var(--wint);color:var(--card);border-radius:6px;padding:0 6px}
+.m button.me{color:var(--blue);font-weight:700}
+.m button:disabled{color:var(--sub);cursor:default}
+.champ{text-align:center;font-size:18px;font-weight:900;padding:16px;border-radius:14px;background:linear-gradient(135deg,#ffcf5a,#ff9a1a);color:#3a2300;margin-top:10px}
+.btns{display:flex;gap:8px;margin-top:10px}
+.btns button{flex:1;border:0;border-radius:12px;padding:10px;font:inherit;font-weight:700;cursor:pointer;background:var(--sky);color:var(--navy)}
+/* 준비물 */
+.ck{display:flex;gap:10px;align-items:center;padding:11px 4px;border-top:1px solid var(--line);font-size:15px;cursor:pointer;user-select:none}
+.ck:first-of-type{border-top:0}
+.ck .bx{flex:0 0 24px;height:24px;border:2px solid var(--line);border-radius:7px;display:grid;place-items:center;font-size:15px;color:#fff}
+.ck.on .bx{background:var(--wint);border-color:var(--wint)}
+.ck.on span:last-child{color:var(--sub);text-decoration:line-through}
+.ck .must{color:var(--orange);font-weight:900;margin-right:2px}
+.prog{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:6px}
+.prog i{display:block;height:100%;background:var(--wint);transition:width .3s}
+.foot{text-align:center;font-size:12px;color:var(--sub);margin-top:24px}
+</style></head><body>
+<header><div class="wrap"><span class="tag">여고부 배구 · 인천 대표</span>
+<h1>제19회 전국학교스포츠클럽 축전<br>인천영종고 배구</h1><p>11. 14.(토) - 11. 16.(월) · 전북 익산</p></div></header>
+<nav><div class="wrap">
+<button data-t="info" class="on">안내</button><button data-t="sched">일정</button><button data-t="sim">대진표</button><button data-t="pack">준비물</button>
+</div></nav>
+<main class="wrap">
+
+<section class="tab on" id="info">
+ <div class="card"><h2>📌 한눈에 보기</h2>
+  <div class="row"><b>대회</b><span>11. 14.(토) - 11. 16.(월) 3일간</span></div>
+  <div class="row"><b>출발</b><span><span class="hl">11. 13.(금) 수업 종료 후</span> 학교에서 버스 출발</span></div>
+  <div class="row"><b>숙소</b><span>전주 풍남관광호텔 (3박)</span></div>
+  <div class="row"><b>복귀</b><span>11. 16.(월) 대회 후 학교 복귀<br><span class="t">경기 결과에 따라 시간 변동</span></span></div>
+  <div class="row"><b>경기장</b><span>1·2일차 남성고 체육관<br><span class="t">익산시 동서로35길 41</span><br>3일차 익산실내체육관<br><span class="t">익산시 무왕로 1397</span></span></div>
+  <div class="row"><b>우리 조</b><span><span class="us">D조 D2</span> · 제주중앙여고, 대전복수고</span></div>
+ </div>
+ <div class="card"><h2>🏐 경기 방식</h2>
+  <div class="row"><b>인원</b><span>9인제 · 세트당 교체 6회</span></div>
+  <div class="row"><b>점수</b><span>1·2세트 21점, 3세트 15점 · 듀스는 2점 차</span></div>
+  <div class="row"><b>네트</b><span>2m 10cm · 코트 18m × 9m · 5호 공</span></div>
+  <div class="row"><b>진출</b><span>여고부 17팀 → 조별 리그 → 10강·8강 토너먼트<br><span class="t">순위: 승패 → 득실점률 → 세트 득실률 → 승자승</span></span></div>
+ </div>
+ <div class="warn">⏰ 앞 경기가 끝나고 <b>25분 안에 오지 않으면 몰수패</b>! 유니폼 번호가 신청 명단과 다르면 부정선수로 몰수돼요.</div>
+</section>
+
+<section class="tab" id="sched">
+ <div class="day"><div class="dbox"><div class="n">13</div><div class="w">금</div></div><div class="dc">
+  <div class="t">📍 학교 → 전주 풍남관광호텔</div>
+  <div class="g"><span class="no gr">출발</span><span>수업 종료 후 버스 출발 · 숙소 체크인</span></div></div></div>
+ <div class="day"><div class="dbox"><div class="n">14</div><div class="w">토</div></div><div class="dc">
+  <div class="t">📍 남성고 체육관 코트1 · 09:00 제1경기 시작</div>
+  <div class="g"><span class="no">제4경기</span><span><span class="us">인천영종고</span> vs 대전복수고</span></div>
+  <div class="g"><span class="no">제11경기</span><span>제주중앙여고 vs <span class="us">인천영종고</span></span></div>
+  <div class="t">예상: 제4경기 11시 30분 전후 · 제11경기 16시 30분 전후</div></div></div>
+ <div class="day"><div class="dbox"><div class="n">15</div><div class="w">일</div></div><div class="dc">
+  <div class="t">📍 남성고 체육관 코트1</div>
+  <div class="g"><span class="no gr">제5경기</span><span>제주중앙여고 vs 대전복수고 → D조 순위 결정</span></div>
+  <div class="g"><span class="no">제9경기</span><span><b>D조 2위면</b> 10강1 vs E조 2위</span></div>
+  <div class="g"><span class="no gr">휴식</span><span><b>D조 1위면</b> 경기 없음</span></div></div></div>
+ <div class="day"><div class="dbox"><div class="n">16</div><div class="w">월</div></div><div class="dc">
+  <div class="t">📍 익산실내체육관 코트2</div>
+  <div class="g"><span class="no">제1경기</span><span>8강3 · C조 1위 vs 10강1 승자</span></div>
+  <div class="g"><span class="no">제2경기</span><span>8강4 · D조 1위 vs 10강2 승자</span></div>
+  <div class="g"><span class="no">제3·4경기</span><span>준결승</span></div>
+  <div class="g"><span class="no">제9경기</span><span>결승 (3·4위전 없음) → 인천 복귀</span></div></div></div>
+</section>
+
+<section class="tab" id="sim">
+ <div class="card"><h2>🔮 결과 입력 · 진출 예상</h2>
+  <div class="t">조별 경기 세트 점수를 넣으면 순위가 자동으로 계산돼요. 빠른 버튼(2:0 등)은 예상용 점수를 채워요. 토너먼트는 이길 팀을 누르세요.</div>
+  <div class="btns"><button id="mine">우리 조만 보기</button><button id="reset">초기화</button></div>
+ </div>
+ <div id="groups"></div>
+ <div class="card"><h2>🏆 토너먼트</h2><div id="ko" class="ko"></div></div>
+</section>
+
+<section class="tab" id="pack">
+ <div class="card"><h2>🎒 준비물 체크</h2>
+  <div class="t" id="pct">0 / 0 완료</div><div class="prog"><i id="bar" style="width:0"></i></div>
+  <h3>★ 꼭! (없으면 출전 못 해요)</h3><div id="ck1"></div>
+  <h3>경기용품</h3><div id="ck2"></div>
+  <h3>생활용품 (3박)</h3><div id="ck3"></div>
+  <div class="t" style="margin-top:10px">👓 안경 대신 스포츠고글 가능 · 경기 중 반지·목걸이 등 장신구는 빼요 · 체크 내용은 이 폰에만 저장돼요</div>
+ </div>
+</section>
+
+<div class="foot">인천영종고 체육부 · 공식 일정은 대회 운영 사정에 따라 바뀔 수 있어요</div>
+</main>
+<script>
+var LS={get:function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+// 탭
+var tabs=document.querySelectorAll('nav button');
+function show(t){tabs.forEach(function(b){b.classList.toggle('on',b.dataset.t===t)});document.querySelectorAll('.tab').forEach(function(s){s.classList.toggle('on',s.id===t)});LS.set('vbf_tab',t)}
+tabs.forEach(function(b){b.onclick=function(){show(b.dataset.t);scrollTo(0,0)}});
+show(LS.get('vbf_tab','info'));
+
+// ---- 대진 데이터 ----
+var T={A1:'길원여고(경북)',A2:'원주여고(강원)',A3:'충북여고(충북)',A4:'목포여상(전남)',
+B1:'순창고(전북)',B2:'천안불당고(충남)',B3:'대구제일고(대구)',B4:'사직여고(부산)',
+C1:'삼일공고(경기)',C2:'성덕고(광주)',C3:'종촌고(세종)',
+D1:'제주중앙여고(제주)',D2:'인천영종고(인천)',D3:'대전복수고(대전)',
+E1:'한영고(서울)',E2:'군북고(경남)',E3:'울산생활과학고(울산)'};
+var ME='D2';
+var G={A:[['1일차 제2경기','A2','A4'],['1일차 제5경기','A1','A3'],['1일차 제9경기','A1','A2'],['1일차 제13경기','A3','A4'],['2일차 제3경기','A2','A3'],['2일차 제8경기','A1','A4']],
+B:[['1일차 제1경기','B1','B2'],['1일차 제6경기','B1','B3'],['1일차 제7경기','B2','B4'],['2일차 제1경기','B3','B4'],['2일차 제6경기','B2','B3'],['2일차 제7경기','B1','B4']],
+C:[['1일차 제3경기','C1','C3'],['1일차 제10경기','C1','C2'],['2일차 제2경기','C2','C3']],
+D:[['1일차 제4경기','D2','D3'],['1일차 제11경기','D1','D2'],['2일차 제5경기','D1','D3']],
+E:[['1일차 제8경기','E1','E3'],['1일차 제12경기','E2','E3'],['2일차 제4경기','E1','E2']]};
+var S=LS.get('vbf_scores',{}); // key "D:0" -> [[a,b],[a,b],[a,b]]
+var K=LS.get('vbf_ko',{});     // match id -> winner seed code
+var onlyMine=LS.get('vbf_mine',false);
+
+function setsOf(k){return (S[k]||[]).filter(function(s){return s&&s[0]!==''&&s[1]!==''&&s[0]!=null&&s[1]!=null&&!(+s[0]===0&&+s[1]===0)})}
+function result(k){var w=[0,0],p=[0,0];setsOf(k).forEach(function(s){var a=+s[0],b=+s[1];p[0]+=a;p[1]+=b;if(a>b)w[0]++;else if(b>a)w[1]++});return{w:w,p:p,done:w[0]===2||w[1]===2}}
+function standings(g){
+ var st={};Object.keys(T).filter(function(c){return c[0]===g}).forEach(function(c){st[c]={c:c,W:0,L:0,PF:0,PA:0,SW:0,SL:0,pl:0}});
+ G[g].forEach(function(m,i){var r=result(g+':'+i);if(!r.done)return;var a=st[m[1]],b=st[m[2]];
+  a.pl++;b.pl++;a.PF+=r.p[0];a.PA+=r.p[1];b.PF+=r.p[1];b.PA+=r.p[0];a.SW+=r.w[0];a.SL+=r.w[1];b.SW+=r.w[1];b.SL+=r.w[0];
+  if(r.w[0]>r.w[1]){a.W++;b.L++}else{b.W++;a.L++}});
+ var arr=Object.values(st);
+ function ratio(x,y){return y?x/y:(x?1e9:0)}
+ function h2h(x,y){var res=0;G[g].forEach(function(m,i){var r=result(g+':'+i);if(!r.done)return;
+  if(m[1]===x.c&&m[2]===y.c)res=r.w[0]>r.w[1]?-1:1;if(m[1]===y.c&&m[2]===x.c)res=r.w[1]>r.w[0]?-1:1});return res}
+ arr.sort(function(x,y){return (y.W-x.W)||(ratio(y.PF,y.PA)-ratio(x.PF,x.PA))||(ratio(y.SW,y.SL)-ratio(x.SW,x.SL))||h2h(x,y)||x.c.localeCompare(y.c)});
+ var done=G[g].every(function(m,i){return result(g+':'+i).done});
+ return{arr:arr,done:done};
+}
+function quick(k,a,b){var p=a>b?[[21,17],[21,18]]:[[17,21],[18,21]];if(a+b===3)p=a>b?[[21,18],[19,21],[15,12]]:[[18,21],[21,19],[12,15]];S[k]=p;save()}
+function save(){LS.set('vbf_scores',S);LS.set('vbf_ko',K);render()}
+
+function renderGroups(){
+ var h='';Object.keys(G).forEach(function(g){
+  if(onlyMine&&g!=='D')return;
+  var sd=standings(g),n=G[g].length===3?3:4;
+  h+='<div class="card grp"><h2>'+g+'조 '+(n===3?'(3팀)':'(4팀)')+(g==='D'?' 💙':'')+'</h2>';
+  G[g].forEach(function(m,i){var k=g+':'+i,r=result(k),v=S[k]||[];
+   h+='<div class="gm"><div class="hd"><span>'+m[0]+'</span><span>'+(r.done?('세트 '+r.w[0]+' : '+r.w[1]):'')+'</span></div><div class="tm">';
+   [1,2].forEach(function(side){var c=m[side],cls='nm'+(c===ME?' me':'')+(r.done&&r.w[side-1]===2?' w':'');
+    h+='<div class="'+cls+'">'+T[c]+'</div><div class="sets">';
+    for(var s=0;s<3;s++){var val=v[s]&&v[s][side-1]!=null?v[s][side-1]:'';h+='<input inputmode="numeric" maxlength="2" data-k="'+k+'" data-s="'+s+'" data-side="'+(side-1)+'" value="'+val+'" placeholder="'+(s+1)+'S">'}
+    h+='</div>'});
+   h+='</div><div class="qk">'+[[2,0],[2,1],[1,2],[0,2]].map(function(q){return '<button data-q="'+k+'|'+q[0]+'|'+q[1]+'">'+q[0]+':'+q[1]+'</button>'}).join('')+'<button data-q="'+k+'|x">지우기</button></div></div>'});
+  h+='<table><tr><th>순위</th><th style="text-align:left">팀</th><th>승패</th><th>득실점률</th><th>세트</th></tr>';
+  sd.arr.forEach(function(t,i){var q=(i===0)?'q1':(i===1?'q2':'');
+   h+='<tr class="'+(t.c===ME?'me':'')+'"><td><span class="rk '+(sd.done?q:'')+'">'+(i+1)+'</span></td><td class="l">'+T[t.c]+'</td><td>'+t.W+'승 '+t.L+'패</td><td>'+(t.PA?(t.PF/t.PA).toFixed(3):(t.PF?'-':'0'))+'</td><td>'+t.SW+':'+t.SL+'</td></tr>'});
+  h+='</table>'+(sd.done?'':'<div class="t" style="margin-top:6px">경기가 다 입력되면 진출 순위가 확정돼요</div>')+'</div>'});
+ document.getElementById('groups').innerHTML=h;
+}
+function seedOf(g,r){var sd=standings(g);return sd.done?sd.arr[r-1].c:null}
+function koMatch(id,label,a,b,la,lb){
+ var w=K[id];if(w&&w!==a&&w!==b){delete K[id];w=null}
+ function btn(c,l){if(!c)return '<button disabled>'+l+'</button>';return '<button data-ko="'+id+'|'+c+'" class="'+(w===c?'w ':'')+(c===ME?'me':'')+'">'+T[c]+'</button>'}
+ return{h:'<div class="m"><div class="mh"><span>'+label+'</span></div>'+btn(a,la)+btn(b,lb)+'</div>',w:(a&&b)?w:null};
+}
+function renderKO(){
+ var h='',A1=seedOf('A',1),A2=seedOf('A',2),B1=seedOf('B',1),B2=seedOf('B',2),C1=seedOf('C',1),C2=seedOf('C',2),D1=seedOf('D',1),D2=seedOf('D',2),E1=seedOf('E',1),E2=seedOf('E',2);
+ var m10a=koMatch('t10a','10강1 · 11.15(일) 제9경기 · 남성고',D2,E2,'D조 2위','E조 2위');
+ var m10b=koMatch('t10b','10강2 · 11.15(일) 제10경기 · 남성고',E1,C2,'E조 1위','C조 2위');
+ var q1=koMatch('q1','8강1 · 11.15(일) 제11경기 · 남성고',A1,B2,'A조 1위','B조 2위');
+ var q2=koMatch('q2','8강2 · 11.15(일) 제12경기 · 남성고',B1,A2,'B조 1위','A조 2위');
+ var q3=koMatch('q3','8강3 · 11.16(월) 제1경기 · 익산실내',C1,m10a.w,'C조 1위','10강1 승자');
+ var q4=koMatch('q4','8강4 · 11.16(월) 제2경기 · 익산실내',D1,m10b.w,'D조 1위','10강2 승자');
+ var s1=koMatch('s1','준결승1 · 11.16(월) 제3경기',q1.w,q3.w,'8강1 승자','8강3 승자');
+ var s2=koMatch('s2','준결승2 · 11.16(월) 제4경기',q2.w,q4.w,'8강2 승자','8강4 승자');
+ var f=koMatch('f','결승 · 11.16(월) 제9경기',s1.w,s2.w,'준결승1 승자','준결승2 승자');
+ h=[m10a,m10b,q1,q2,q3,q4,s1,s2,f].map(function(x){return x.h}).join('');
+ if(f.w)h+='<div class="champ">🏆 우승 예상: '+T[f.w]+(f.w===ME?' 💙🎉':'')+'</div>';
+ document.getElementById('ko').innerHTML=h;
+}
+function render(){renderGroups();renderKO();document.getElementById('mine').textContent=onlyMine?'전체 조 보기':'우리 조만 보기'}
+document.getElementById('groups').addEventListener('input',function(e){var i=e.target;if(!i.dataset.k)return;var k=i.dataset.k,s=+i.dataset.s,sd=+i.dataset.side;
+ S[k]=S[k]||[];S[k][s]=S[k][s]||['',''];S[k][s][sd]=i.value.replace(/\D/g,'');LS.set('vbf_scores',S);clearTimeout(window._t);window._t=setTimeout(function(){var f=document.activeElement,id=f&&f.dataset&&f.dataset.k?[f.dataset.k,f.dataset.s,f.dataset.side]:null;render();if(id){var n=document.querySelector('input[data-k="'+id[0]+'"][data-s="'+id[1]+'"][data-side="'+id[2]+'"]');if(n){n.focus();var l=n.value.length;n.setSelectionRange(l,l)}}},600)});
+document.getElementById('groups').addEventListener('click',function(e){var q=e.target.dataset.q;if(!q)return;var p=q.split('|');if(p[1]==='x'){delete S[p[0]];save()}else quick(p[0],+p[1],+p[2])});
+document.getElementById('ko').addEventListener('click',function(e){var b=e.target.closest('button');if(!b||!b.dataset.ko)return;var p=b.dataset.ko.split('|');K[p[0]]=K[p[0]]===p[1]?null:p[1];save()});
+document.getElementById('mine').onclick=function(){onlyMine=!onlyMine;LS.set('vbf_mine',onlyMine);render()};
+document.getElementById('reset').onclick=function(){S={};K={};save()};
+render();
+
+// ---- 준비물 ----
+var P=[['ck1',['나이스 생활기록부 1면 출력본 (사진 포함)','학생증','대회 참가 서약서 (서명)'],1],
+['ck2',['경기 유니폼 (학교 배부 · 번호 확인)','배구화 · 실내 운동화','무릎보호대','땀 닦을 수건','개인 물병','스포츠고글 (안경 쓰는 사람)']],
+['ck3',['여벌 옷 · 속옷 (3박)','따뜻한 겉옷 (패딩)','잠옷 · 슬리퍼','세면도구 · 수건','휴대폰 충전기 · 보조배터리','개인 상비약 · 복용약','생리용품 · 마스크']]];
+var C=LS.get('vbf_pack',{});
+function renderPack(){var tot=0,on=0;P.forEach(function(g){var h='';g[1].forEach(function(t,i){var k=g[0]+i,c=!!C[k];tot++;if(c)on++;
+ h+='<div class="ck'+(c?' on':'')+'" data-c="'+k+'"><span class="bx">'+(c?'✓':'')+'</span><span>'+(g[2]?'<span class="must">★</span>':'')+t+'</span></div>'});document.getElementById(g[0]).innerHTML=h});
+ document.getElementById('pct').textContent=on+' / '+tot+' 완료'+(on===tot?' 🎉 준비 끝!':'');document.getElementById('bar').style.width=(on/tot*100)+'%'}
+document.getElementById('pack').addEventListener('click',function(e){var d=e.target.closest('[data-c]');if(!d)return;C[d.dataset.c]=!C[d.dataset.c];LS.set('vbf_pack',C);renderPack()});
+renderPack();
+</script>
+</body></html>
