@@ -82,6 +82,13 @@ tr.me td.l{color:var(--blue)}
 .ck .must{color:var(--orange);font-weight:900;margin-right:2px}
 .prog{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:6px}
 .prog i{display:block;height:100%;background:var(--wint);transition:width .3s}
+.rm{display:grid;grid-template-columns:62px 92px minmax(0,1fr);gap:8px;align-items:center;padding:10px 0;border-top:1px solid var(--line);font-size:15px}
+.rm .k{font-weight:900;color:var(--navy)}
+.rm .h{font-weight:700}.rm .h.e,.rm .n.e{color:var(--sub);font-weight:400}
+.rm .n{display:flex;gap:6px;flex-wrap:wrap}
+.rm .n i{font-style:normal;background:var(--sky);color:var(--navy);font-weight:900;border-radius:8px;padding:1px 9px}
+.rm input{width:100%;height:36px;border:1.5px solid var(--line);border-radius:8px;padding:0 8px;font:inherit;font-size:15px;background:var(--bg);color:var(--ink)}
+.save{display:block;width:100%;margin-top:10px;border:0;border-radius:12px;padding:12px;font:inherit;font-weight:700;background:var(--blue);color:#fff;cursor:pointer}
 .foot{text-align:center;font-size:12px;color:var(--sub);margin-top:24px}
 </style></head><body>
 <header><div class="wrap"><span class="tag">여고부 배구 · 인천 대표</span>
@@ -102,7 +109,8 @@ tr.me td.l{color:var(--blue)}
  </div>
  <div class="card"><h2>🛏️ 숙소 · 방배정</h2>
   <div class="row"><b>숙소</b><span>전주 풍남관광호텔 · 11. 13.(금) - 11. 16.(월) 3박</span></div>
-  <div class="row"><b>방</b><span>학생 방 5개 (1호실 - 5호실, 방마다 2-3명)<br><span class="t">호실 번호와 방 친구는 호텔 도착 후 단톡방 이미지로 안내해요</span></span></div>
+  <div id="rooms"></div>
+  <div class="t" id="roomsNote" style="margin:6px 0 4px">호텔 도착 후 선생님이 호실과 등번호를 채워요 · 자동으로 바로 바뀌어요</div>
   <div class="row"><b>약속</b><span>밤 10시 이후 방 밖 이동 금지 · 외출은 선생님 허락 후 · 객실 비품 파손 주의</span></div>
  </div>
  <div class="card"><h2>🏐 경기 방식</h2>
@@ -246,6 +254,27 @@ document.getElementById('ko').addEventListener('click',function(e){var b=e.targe
 document.getElementById('mine').onclick=function(){onlyMine=!onlyMine;LS.set('vbf_mine',onlyMine);render()};
 document.getElementById('reset').onclick=function(){S={};K={};save()};
 render();
+
+// ---- 숙소 방배정 (공유 저장: 호실·등번호만) ----
+var DB='https://matchmaker-28187-default-rtdb.asia-southeast1.firebasedatabase.app/vb_festival/rooms';
+var EDIT=/[?&]edit\b/.test(location.search);
+var R=LS.get('vbf_rooms',{});
+function renderRooms(){var h='';for(var i=1;i<=5;i++){var r=R[i]||{},nums=(r.n||'').split(/[ ,]+/).filter(Boolean);
+ if(EDIT)h+='<div class="rm"><div class="k">'+i+'호실</div><input data-rh="'+i+'" inputmode="numeric" maxlength="6" placeholder="호실" value="'+(r.h||'')+'"><input data-rn="'+i+'" inputmode="numeric" maxlength="24" placeholder="등번호 예: 5, 9" value="'+(r.n||'')+'"></div>';
+ else h+='<div class="rm"><div class="k">'+i+'호실</div><div class="h'+(r.h?'':' e')+'">'+(r.h?r.h+'호':'(    )호')+'</div><div class="n'+(nums.length?'':' e')+'">'+(nums.length?nums.map(function(n){return '<i>'+n+'번</i>'}).join(''):'배정 전')+'</div></div>'}
+ if(EDIT)h+='<button class="save" id="saveRooms">저장하기</button>';
+ document.getElementById('rooms').innerHTML=h;
+ if(EDIT)document.getElementById('saveRooms').onclick=saveRooms}
+function saveRooms(){var b=document.getElementById('saveRooms');b.textContent='저장 중...';var jobs=[];
+ for(var i=1;i<=5;i++){var hv=document.querySelector('[data-rh="'+i+'"]').value.replace(/[^0-9A-Za-z-]/g,'').slice(0,6),nv=document.querySelector('[data-rn="'+i+'"]').value.replace(/[^0-9 ,]/g,'').slice(0,24);
+  R[i]={h:hv,n:nv,at:Date.now()};jobs.push(fetch(DB+'/'+i+'.json',{method:'PUT',body:JSON.stringify(R[i])}).then(function(r){if(!r.ok)throw 0}))}
+ Promise.all(jobs).then(function(){LS.set('vbf_rooms',R);b.textContent='✅ 저장됐어요'}).catch(function(){b.textContent='⚠️ 저장 실패 · 다시 누르기'})}
+function loadRooms(d){if(d&&typeof d==='object'){R={};Object.keys(d).forEach(function(k){if(d[k])R[k]=d[k]});LS.set('vbf_rooms',R);if(!EDIT||!window._dirty)renderRooms()}}
+renderRooms();
+fetch(DB+'.json').then(function(r){return r.json()}).then(function(d){if(d)loadRooms(d)}).catch(function(){});
+if(!EDIT&&window.EventSource&&!/nosse/.test(location.search)){try{var es=new EventSource(DB+'.json');es.addEventListener('put',function(){fetch(DB+'.json').then(function(r){return r.json()}).then(loadRooms)});es.addEventListener('patch',function(){fetch(DB+'.json').then(function(r){return r.json()}).then(loadRooms)})}catch(e){}}
+if(EDIT){show('info');document.getElementById('rooms').addEventListener('input',function(){window._dirty=1})}
+if(EDIT)document.getElementById('roomsNote').textContent='✏️ 선생님 입력 모드 · 이름 대신 등번호만 적어요 (예: 5, 9)';
 
 // ---- 준비물 ----
 var P=[['ck1',['나이스 생활기록부 1면 출력본 (사진 포함)','학생증','대회 참가 서약서 (서명)'],1],
