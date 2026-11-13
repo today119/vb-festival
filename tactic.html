@@ -138,7 +138,7 @@ input{height:48px}
 .fc .vl{position:absolute;top:0;bottom:0;border-left:2px dashed rgba(255,255,255,.55)}
 .fc .hl{position:absolute;left:0;width:66%;border-top:2px dashed rgba(255,255,255,.55)}
 .fc .oz{position:absolute;width:11.33%;height:33.33%;border:1px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:rgba(255,255,255,.85);text-align:center;cursor:pointer;background:var(--court2)}
-.fc .oz.hit{background:rgba(250,204,21,.85);color:#3d2e00;font-size:17px;font-weight:900}
+.fc .oz.hit{background:rgba(250,204,21,.92);color:#3d2e00;font-weight:900;flex-direction:column;line-height:1}.fc .oz.hit big{font-size:clamp(34px,5vw,64px);font-weight:900}.fc .oz.hit small{font-size:15px}
 .fc .zl{font-size:12px}
 .srv{display:flex;align-items:center;justify-content:center;min-height:64px}
 .srv span{width:64px;height:64px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;font-size:24px;line-height:1}
@@ -304,7 +304,7 @@ function render(){var c=calc(),si=c.cur;while(D.sets.length<=si)D.sets.push(newS
  // 코트 (가로: 왼쪽 우리, 오른쪽 상대)
  var h='<div class="vl" style="left:'+fx(22)+'%"></div><div class="vl" style="left:'+fx(44)+'%"></div><div class="net" style="left:'+fx(66)+'%"></div>';
  var ourNext=sv.serving==='us'?usSrv:L[st.order[(sv.iuRaw+1+9)%9]],T=D.ourTg||{},tz=T[ourNext];
- OZ.forEach(function(z,k){var c=k%3,r=Math.floor(k/3);h+='<div class="oz'+(tz===k?' hit':'')+'" data-oz2="'+k+'" style="left:'+fx(D.flip?66+(c+1)*11.33:66+c*11.33)+'%;top:'+(r*33.33)+'%">'+(tz===k?'🎯 #'+esc(ourNext):z)+'</div>'});
+ OZ.forEach(function(z,k){var c=k%3,r=Math.floor(k/3);h+='<div class="oz'+(tz===k?' hit':'')+'" data-oz2="'+k+'" style="left:'+fx(D.flip?66+(c+1)*11.33:66+c*11.33)+'%;top:'+(r*33.33)+'%">'+(tz===k?'<small>🎯 목적타</small><big>'+esc(ourNext)+'</big>':z)+'</div>'});
  if(sv.serving==='them'){var t=O.tg[thSrvI];if(t){var tx=t.z!=null?ZP[t.z][0]:t.x,ty=t.z!=null?ZP[t.z][1]:t.y;h+='<div class="tg" style="left:'+fx((100-ty)*0.66)+'%;top:'+tx+'%"></div><div class="tgl" style="left:'+fx((100-ty)*0.66)+'%;top:'+tx+'%">🎯 #'+esc(thSrv||thSrvI+1)+(t.m?' '+esc(t.m):'')+'</div>'}}
  var subIn={};D.subs.forEach(function(x){if(x.s===si)subIn[x.inn]=1});
  L.forEach(function(n,sl){var p=st.pos[sl],oi=st.order.indexOf(sl);
