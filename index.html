@@ -100,11 +100,30 @@ tr.me td.l{color:var(--blue)}
 .pinbox button{height:38px;border:0;border-radius:10px;padding:0 16px;font:inherit;font-weight:700;background:var(--blue);color:#fff;cursor:pointer}
 .foot{text-align:center;font-size:12px;color:var(--sub);margin-top:24px}
 [hidden]{display:none!important}
+.mi{border-top:1px solid var(--line);padding:12px 0}.mi:first-of-type{border-top:0}
+.mi .top{display:flex;gap:10px;align-items:center;cursor:pointer;user-select:none}
+.mi .bx{flex:0 0 26px;height:26px;border:2px solid var(--line);border-radius:8px;display:grid;place-items:center;color:#fff;font-size:15px}
+.mi.on .bx{background:var(--wint);border-color:var(--wint)}
+.mi .nm{font-weight:900;font-size:15px}.mi.on .nm{color:var(--sub);text-decoration:line-through}
+.mi .amt{margin-left:auto;text-align:right;font-weight:900;color:var(--blue);white-space:nowrap}
+.mi .amt small{display:block;font-size:11px;color:var(--sub);font-weight:500}
+.mi .f{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:6px;margin-top:8px}
+.mi input{width:100%;height:36px;border:1.5px solid var(--line);border-radius:8px;padding:0 9px;font:inherit;font-size:14px;background:var(--bg);color:var(--ink)}
+.mi .rc{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--sub);margin-top:6px}
+.mi .rc input{width:18px;height:18px}
+.mi .x{margin-left:auto;border:0;background:none;color:var(--sub);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline}
+.mi.over .amt{color:#b42318}
+.msum{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px;text-align:center}
+.msum div{background:var(--sky);border-radius:12px;padding:8px 4px;font-size:12px;color:var(--sub)}
+.msum b{display:block;font-size:16px;color:var(--navy)}
+.msum .neg b{color:#b42318}
+.add{display:grid;grid-template-columns:minmax(0,1fr) 96px;gap:6px;margin-top:10px}
+.add input{height:38px;border:1.5px solid var(--line);border-radius:8px;padding:0 9px;font:inherit;font-size:14px;background:var(--bg);color:var(--ink);min-width:0}
 </style></head><body>
 <header><div class="wrap"><span class="tag">여고부 배구 · 인천 대표</span>
-<h1>제19회 전국학교스포츠클럽 축전<br>인천영종고 배구</h1><p>11. 14.(토) - 11. 16.(월) · 전북 익산</p></div></header>
+<h1 id="ttl">제19회 전국학교스포츠클럽 축전<br>인천영종고 배구</h1><p>11. 14.(토) - 11. 16.(월) · 전북 익산</p></div></header>
 <nav><div class="wrap">
-<button data-t="info" class="on">안내</button><button data-t="sched">일정</button><button data-t="sim">대진표</button><button data-t="pack">준비물</button>
+<button data-t="info" class="on">안내</button><button data-t="sched">일정</button><button data-t="sim">대진표</button><button data-t="pack">준비물</button><button data-t="money" id="mBtn" hidden>식비</button>
 </div></nav>
 <main class="wrap">
 
@@ -190,6 +209,26 @@ tr.me td.l{color:var(--blue)}
   <h3>경기용품</h3><div id="ck2"></div>
   <h3>생활용품 (3박)</h3><div id="ck3"></div>
   <div class="t" style="margin-top:10px">👓 안경 대신 스포츠고글 가능 · 경기 중 반지·목걸이 등 장신구는 빼요 · 체크 내용은 이 폰에만 저장돼요</div>
+ </div>
+</section>
+
+<section class="tab" id="money">
+ <div class="card" id="mLock"><h2>🔒 선생님 전용</h2>
+  <div class="pinbox"><input id="mpin" type="password" inputmode="numeric" placeholder="비밀번호"><button id="mpinOk">열기</button></div><div class="t" id="mpinMsg"></div>
+ </div>
+ <div id="mBody" hidden>
+ <div class="card"><h2>💰 여고부 경비 사용 체크</h2>
+  <div class="t">경비 품의 2,938,000원 · 학생 14명 · 이 폰에만 저장돼요 (버스는 차량 품의라 뺐어요)</div>
+  <div class="msum"><div>품의<b id="mPlan">0</b></div><div>쓴 돈<b id="mUsed">0</b></div><div id="mLeftBox">남은 돈<b id="mLeft">0</b></div></div>
+  <div class="t" id="mPct" style="margin-top:8px"></div><div class="prog"><i id="mBar" style="width:0"></i></div>
+ </div>
+ <div id="mDays"></div>
+ <div class="card"><h2>➕ 항목 더하기</h2>
+  <div class="add"><input id="mNew" placeholder="예: 생수 · 간식 추가"><input id="mNewAmt" type="number" inputmode="numeric" placeholder="예정 금액"></div>
+  <button class="save" id="mAdd">항목 더하기 (기타)</button>
+  <div class="warn" style="font-size:13px">단가 기준: 식비 1식 1인 9,000원 · 간식 1일 1인 5,000원 · 특식 1회 1인 30,000원 · 학생 급량비로 선생님 식사는 못 내요(여비). 카드 영수증·참가 인원 명단을 정산 때 같이 내요.</div>
+  <button class="x" id="mReset" style="display:block;margin:12px auto 0;border:0;background:none;color:var(--sub);text-decoration:underline;font:inherit;font-size:13px;cursor:pointer">처음 상태로 되돌리기</button>
+ </div>
  </div>
 </section>
 
@@ -328,5 +367,46 @@ function renderPack(){var tot=0,on=0;P.forEach(function(g){var h='';g[1].forEach
  document.getElementById('pct').textContent=on+' / '+tot+' 완료'+(on===tot?' 🎉 준비 끝!':'');document.getElementById('bar').style.width=(on/tot*100)+'%'}
 document.getElementById('pack').addEventListener('click',function(e){var d=e.target.closest('[data-c]');if(!d)return;C[d.dataset.c]=!C[d.dataset.c];LS.set('vbf_pack',C);renderPack()});
 renderPack();
+function esc(t){return String(t).replace(/[&<>"']/g,function(c){return '&#'+c.charCodeAt(0)+';'})}
+// ---- 선생님 전용: 경비 사용 체크 (제목 5번 누르거나 주소 끝 #money) ----
+var MD=[['11/13(금) 출발',[['s1','간식','14명 × 5,000원',70000],['b1','석식','14명 × 9,000원',126000]]],
+['11/14(토) 1일차',[['b2','조식','14명 × 9,000원',126000],['b3','중식','14명 × 9,000원',126000],['s2','간식','14명 × 5,000원',70000],['b4','석식','14명 × 9,000원',126000]]],
+['11/15(일) 2일차',[['b5','조식','14명 × 9,000원',126000],['b6','중식','14명 × 9,000원',126000],['s3','간식','14명 × 5,000원',70000],['sp','석식 특식','14명 × 30,000원',420000]]],
+['11/16(월) 3일차·귀교',[['b7','조식','14명 × 9,000원',126000],['b8','중식','14명 × 9,000원',126000],['s4','간식','14명 × 5,000원',70000],['h1','숙박비 (풍남관광호텔 3박)','체크아웃 때 결제 · 6실',1230000]]],
+['기타',[]]];
+var MS=LS.get('vbf_money',{}),MX=LS.get('vbf_money_x',[]);
+function won(n){return (n<0?'-':'')+Math.abs(Math.round(n)).toLocaleString('ko-KR')}
+function mItems(){var d=MD.map(function(x){return [x[0],x[1].slice()]});MX.forEach(function(it){d[d.length-1][1].push(it)});return d}
+function renderMoney(){var plan=0,used=0,tot=0,done=0,h='';
+ mItems().forEach(function(day){if(!day[1].length)return;h+='<div class="card"><h2>📅 '+day[0]+'</h2>';
+  day[1].forEach(function(it){var st=MS[it[0]]||{},a=st.a===undefined||st.a===''?null:+st.a,on=!!st.c;plan+=it[3];tot++;if(on){done++;used+=(a==null?it[3]:a)}
+   var over=a!=null&&a>it[3];
+   h+='<div class="mi'+(on?' on':'')+(over?' over':'')+'" data-k="'+it[0]+'"><div class="top" data-tg="1"><span class="bx">'+(on?'✓':'')+'</span><span style="min-width:0"><span class="nm">'+esc(it[1])+'</span><div class="t">'+esc(it[2])+'</div></span><span class="amt">'+won(it[3])+'<small>'+(a!=null?'실제 '+won(a):'예정')+'</small></span></div>';
+   h+='<div class="f"><input data-f="a" type="number" inputmode="numeric" placeholder="실제 쓴 금액" value="'+(a==null?'':a)+'"><input data-f="m" placeholder="가게 · 메모" value="'+esc(st.m||'')+'"></div>';
+   h+='<label class="rc"><input type="checkbox" data-f="r"'+(st.r?' checked':'')+'>영수증 받음'+(it[0].charAt(0)==='x'?'<button class="x" data-del="'+it[0]+'">항목 지우기</button>':'')+'</label>';
+   if(over)h+='<div class="t" style="color:#b42318;margin-top:4px">⚠️ 예정보다 '+won(a-it[3])+'원 많아요</div>';
+   h+='</div>'});h+='</div>'});
+ document.getElementById('mDays').innerHTML=h;
+ document.getElementById('mPlan').textContent=won(plan);document.getElementById('mUsed').textContent=won(used);document.getElementById('mLeft').textContent=won(plan-used);
+ document.getElementById('mLeftBox').className=plan-used<0?'neg':'';
+ document.getElementById('mPct').textContent=done+' / '+tot+' 사용 완료'+(tot&&done===tot?' · 다 썼어요':'');document.getElementById('mBar').style.width=(tot?done/tot*100:0)+'%'}
+function mSave(){LS.set('vbf_money',MS)}
+var mb=document.getElementById('mDays');
+mb.addEventListener('click',function(e){var d=e.target.closest('[data-del]');if(d){MX=MX.filter(function(x){return x[0]!==d.dataset.del});delete MS[d.dataset.del];LS.set('vbf_money_x',MX);mSave();renderMoney();return}
+ if(!e.target.closest('[data-tg]'))return;var k=e.target.closest('[data-k]').dataset.k;MS[k]=MS[k]||{};MS[k].c=!MS[k].c;if(MS[k].c)MS[k].t=Date.now();mSave();renderMoney()});
+mb.addEventListener('change',function(e){var f=e.target.dataset.f;if(!f)return;var k=e.target.closest('[data-k]').dataset.k;MS[k]=MS[k]||{};
+ if(f==='r')MS[k].r=e.target.checked;else if(f==='m')MS[k].m=e.target.value.slice(0,60);else{MS[k].a=e.target.value===''?'':Math.max(0,+e.target.value);if(MS[k].a!==''&&!MS[k].c)MS[k].c=true}
+ mSave();renderMoney()});
+document.getElementById('mAdd').onclick=function(){var n=document.getElementById('mNew').value.trim(),v=+document.getElementById('mNewAmt').value||0;if(!n)return;
+ MX.push(['x'+Date.now(),n.slice(0,30),'직접 더한 항목',v]);LS.set('vbf_money_x',MX);document.getElementById('mNew').value='';document.getElementById('mNewAmt').value='';renderMoney()};
+document.getElementById('mReset').onclick=function(){if(!confirm('체크·금액·메모를 모두 지울까요?'))return;MS={};MX=[];mSave();LS.set('vbf_money_x',MX);renderMoney()};
+function mOpen(on){document.getElementById('mLock').hidden=on;document.getElementById('mBody').hidden=!on;document.getElementById('mBtn').hidden=!on;if(on)renderMoney()}
+function mGo(){mOpen(LS.get('vbf_munlock',false));show('money');scrollTo(0,0)}
+function mTry(){sha('vbf:'+document.getElementById('mpin').value).then(function(x){if(x===PINH){document.getElementById('mpin').value='';LS.set('vbf_munlock',true);mOpen(true)}else document.getElementById('mpinMsg').textContent='비밀번호가 달라요'})}
+document.getElementById('mpinOk').onclick=mTry;
+document.getElementById('mpin').addEventListener('keydown',function(e){if(e.key==='Enter')mTry()});
+var tc=0,tt=0;document.getElementById('ttl').addEventListener('click',function(){var n=Date.now();tc=n-tt<600?tc+1:1;tt=n;if(tc>=5){tc=0;mGo()}});
+if(LS.get('vbf_munlock',false))mOpen(true);
+if(location.hash==='#money')mGo();else if(LS.get('vbf_tab','info')==='money'&&!LS.get('vbf_munlock',false))show('info');
 </script>
 </body></html>
