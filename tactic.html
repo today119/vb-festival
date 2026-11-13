@@ -252,6 +252,8 @@ function nmOf(n){var r=D.roster.find(function(x){return x.n===n});return r&&r.nm
 function newSet(prev){var pl=D.plans[0];var src=prev||{start:pl.p.slice(),order:orderFromPlan(pl),pos:JSON.parse(JSON.stringify(pl.pos))};
  return {start:src.start.slice(),order:src.order.slice(),pos:JSON.parse(JSON.stringify(src.pos)),first:prev?(prev.first==='us'?'them':'us'):'us'}}
 function orderFromPlan(pl){var a=[0,1,2,3,4,5,6,7,8];a.sort(function(x,y){return (+pl.o[x]||99)-(+pl.o[y]||99)});return a}
+// 기본 명단(등번호만 — 이름은 저장소에 안 넣음): 명단이 비어 있으면 플랜 A 번호로 채움
+if(!D.roster.length){var DEFN=['3','1','4','5','2','19','17','6','8','7','10','9'];D.roster=DEFN.map(function(n){return {n:n,nm:''}});if(!D.plans[0].p.filter(Boolean).length){D.plans[0].p=DEFN.slice(0,9);D.plans[0].o=[1,2,3,4,5,6,7,8,9];D.plans[0].pos=defPos()}D.sets=[];D.pts=[];D.subs=[]}
 if(!D.sets.length)D.sets.push(newSet(null));
 
 // ---- 경기 계산 ----
