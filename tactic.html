@@ -281,7 +281,8 @@ if(D.applyA){delete D.applyA;var st0=D.sets[D.sets.length-1],si0=D.sets.length-1
 
 // ---- 경기 계산 ----
 var WR=null; // 위리 이벤트로 만든 점수 목록
-function rules(si){var r=WR&&WR.rules;var g=r&&r.gamesToWin?r.gamesToWin:2,max=g*2-1;var tgt=(si===max-1)?((r&&r.lastGamePoints)||15):((r&&r.points)||21);return {tgt:tgt,g:g,cap:r&&r.cap}}
+function rules(si){var r=null; // 대회 규칙(21·21·15, 3세트) 고정 — 위리 설정이 달라도 작전판은 대회 규칙으로
+ var g=r&&r.gamesToWin?r.gamesToWin:2,max=g*2-1;var tgt=(si===max-1)?((r&&r.lastGamePoints)||15):((r&&r.points)||21);return {tgt:tgt,g:g,cap:r&&r.cap}}
 function ptsList(){return WR?WR.pts:D.pts}
 function setWon(a,b,si){var r=rules(si);return (a>=r.tgt&&a-b>=2)||(r.cap&&a>=r.cap&&a>b)}
 function calc(){var P=ptsList(),res={sets:[],usSets:0,thSets:0},cur=0;
