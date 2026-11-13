@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>배구 작전판</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏐</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#14306b;--blue:#2a5bd7;--sky:#e8f0ff;--orange:#ff7a1a;--ink:#1d2433;--sub:#5b6577;--line:#d9e1ef;--bg:#f3f6fb;--card:#fff;--red:#d92d20;--yel:#facc15;--court:#f5b36b;--court2:#e8964a;--win:#0f7a4c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--navy:#9db8ff;--blue:#7aa2ff;--sky:#1d2a4a;--ink:#e8ecf4;--sub:#9aa5b8;--line:#2c3650;--bg:#0e1424;--card:#172038;--court:#8a5a2b;--court2:#6b4420;--win:#6fe0a8}}
+:root[data-theme="dark"]{--navy:#9db8ff;--blue:#7aa2ff;--sky:#1d2a4a;--ink:#e8ecf4;--sub:#9aa5b8;--line:#2c3650;--bg:#0e1424;--card:#172038;--court:#8a5a2b;--court2:#6b4420;--win:#6fe0a8}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{overflow-x:hidden}
+body{font-family:'Noto Sans KR',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:18px;line-height:1.45}
+[hidden]{display:none!important}
+button{font:inherit;cursor:pointer}
+.top{display:flex;gap:8px;align-items:center;padding:10px 16px;background:var(--navy);color:#fff}
+:root[data-theme="dark"] .top{background:#14306b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .top{background:#14306b}}
+.top h1{font-size:20px;font-weight:900;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top button{border:0;border-radius:12px;padding:9px 14px;font-weight:900;font-size:17px;background:rgba(255,255,255,.16);color:#fff}
+.top button.on{background:#fff;color:#14306b}
+.page{padding:12px 16px 40px;max-width:1280px;margin:0 auto}
+.game{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:900px){.courtwrap{max-width:calc(100vh - 210px);margin:0 auto}.opp{height:80px}.game{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:start}}
+.card{background:var(--card);border-radius:18px;padding:14px;box-shadow:0 2px 8px rgba(20,48,107,.07)}
+h2{font-size:21px;font-weight:900;color:var(--navy);margin-bottom:8px}
+h3{font-size:18px;font-weight:900;margin:14px 0 6px}
+.t{font-size:15px;color:var(--sub)}
+/* 점수 */
+.score{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:stretch}
+.side{border-radius:16px;padding:10px;text-align:center;background:var(--sky)}
+.side.us{background:#dbe7ff}.side.them{background:#ffe4e0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .side.us{background:#1d2f5c}:root:not([data-theme="light"]) .side.them{background:#4a2020}}
+:root[data-theme="dark"] .side.us{background:#1d2f5c}:root[data-theme="dark"] .side.them{background:#4a2020}
+.side .nm{font-size:17px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.side .pt{font-size:64px;font-weight:900;line-height:1.05;font-variant-numeric:tabular-nums}
+.side .sv{font-size:15px;font-weight:900;min-height:22px}
+.side button{width:100%;border:0;border-radius:12px;padding:12px 0;font-size:22px;font-weight:900;background:var(--blue);color:#fff;margin-top:6px}
+.side.them button{background:var(--red)}
+.mid{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-width:84px}
+.mid .sets{font-size:30px;font-weight:900;font-variant-numeric:tabular-nums}
+.mid .sl{font-size:15px;color:var(--sub);font-weight:700;text-align:center}
+.mid button{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:8px 10px;font-size:15px;font-weight:700}
+.prev{font-size:15px;color:var(--sub);text-align:center;margin-top:6px}
+.serve{margin-top:10px;border-radius:14px;padding:12px 14px;font-size:20px;font-weight:900;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.serve.us{background:#fff6cc;color:#7a5a00}.serve.them{background:#ffe4e0;color:#9b1c1c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .serve.us{background:#4a3c08;color:#ffe680}:root:not([data-theme="light"]) .serve.them{background:#4a2020;color:#ffb4b4}}
+:root[data-theme="dark"] .serve.us{background:#4a3c08;color:#ffe680}:root[data-theme="dark"] .serve.them{background:#4a2020;color:#ffb4b4}
+.serve small{font-size:16px;font-weight:700;opacity:.85}
+.banner{margin-top:10px;border-radius:14px;padding:12px;background:var(--win);color:#fff;font-weight:900;font-size:19px;text-align:center}
+.banner button{display:block;width:100%;margin-top:8px;border:0;border-radius:12px;padding:12px;font-size:19px;font-weight:900;background:#fff;color:var(--win)}
+/* 코트 */
+.courtwrap{position:relative;user-select:none;-webkit-user-select:none;touch-action:none}
+.opp{position:relative;height:110px;background:var(--court2);border-radius:14px 14px 0 0;border:3px solid #fff;border-bottom:0;display:flex;align-items:center;justify-content:center;gap:10px;color:#fff;font-weight:900;font-size:18px}
+.net{height:12px;background:repeating-linear-gradient(90deg,#fff 0 6px,#333 6px 12px);border:2px solid #fff}
+.court{position:relative;aspect-ratio:1/1;background:var(--court);border:3px solid #fff;border-top:0;border-radius:0 0 14px 14px;overflow:hidden}
+.court .ln{position:absolute;left:0;right:0;border-top:2px dashed rgba(255,255,255,.55)}
+.court .zl{position:absolute;font-size:13px;font-weight:700;color:rgba(255,255,255,.75);transform:translate(-50%,-50%);pointer-events:none;text-align:center;line-height:1.2}
+.chip{position:absolute;width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:50%;background:#fff;border:4px solid var(--blue);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(0,0,0,.25);touch-action:none;cursor:grab;color:#14306b;z-index:2}
+.chip b{font-size:30px;font-weight:900;line-height:1}
+.chip i{font-style:normal;font-size:12px;font-weight:700;max-width:68px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip .o{position:absolute;top:-8px;left:-8px;width:28px;height:28px;border-radius:50%;background:#14306b;color:#fff;font-size:15px;font-weight:900;display:grid;place-items:center}
+.chip.srv{border-color:var(--yel);box-shadow:0 0 0 6px rgba(250,204,21,.55),0 3px 8px rgba(0,0,0,.25)}
+.chip.srv .o{background:#c99700}
+.chip.pick{border-color:var(--red);animation:pul 1s infinite}
+.chip.subin{border-color:var(--orange)}
+@keyframes pul{50%{box-shadow:0 0 0 8px rgba(217,45,32,.35)}}
+.tg{position:absolute;width:70px;height:70px;margin:-35px 0 0 -35px;border-radius:50%;border:5px solid var(--red);background:rgba(217,45,32,.18);pointer-events:none;z-index:1}
+.tg:before,.tg:after{content:'';position:absolute;background:var(--red);left:50%;top:50%}
+.tg:before{width:5px;height:96px;margin:-48px 0 0 -2.5px}.tg:after{height:5px;width:96px;margin:-2.5px 0 0 -48px}
+.tgl{position:absolute;transform:translate(-50%,40px);background:var(--red);color:#fff;font-weight:900;font-size:15px;border-radius:8px;padding:2px 8px;white-space:nowrap;pointer-events:none;z-index:3}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.tools button{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:10px 14px;font-size:17px;font-weight:700}
+.tools button.on{background:var(--red);border-color:var(--red);color:#fff}
+.tools button.pl{background:var(--sky);color:var(--navy);border-color:var(--sky);font-weight:900}
+/* 벤치 */
+.bench{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.bench button{min-width:64px;border:2.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:14px;padding:6px 10px;text-align:center}
+.bench button b{display:block;font-size:26px;font-weight:900;line-height:1.1}
+.bench button i{display:block;font-style:normal;font-size:12px;color:var(--sub);max-width:80px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bench button.pick{border-color:var(--orange);background:#fff1e3}
+.bench button.no{opacity:.4}
+.cnt{display:inline-block;font-size:17px;font-weight:900;border-radius:99px;padding:2px 12px;background:var(--sky);color:var(--navy);margin-left:6px}
+.cnt.full{background:#ffe4e0;color:var(--red)}
+.msg{margin-top:8px;font-size:17px;font-weight:700;color:var(--red);min-height:24px}
+.msg.ok{color:var(--win)}
+.log{margin-top:8px}
+.log div{display:flex;gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--line);font-size:17px}
+.log div:first-child{border-top:0}
+.log button{margin-left:auto;border:0;background:none;color:var(--sub);text-decoration:underline;font-size:15px}
+.order{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.order span{min-width:46px;text-align:center;border-radius:10px;padding:4px 6px;background:var(--sky);color:var(--navy);font-weight:900;font-size:19px}
+.order span small{display:block;font-size:11px;color:var(--sub);font-weight:700}
+.order span.now{background:var(--yel);color:#3d2e00}
+.order.them span{background:#ffe4e0;color:#9b1c1c}.order.them span.now{background:var(--red);color:#fff}
+/* 설정 */
+.set{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:900px){.set{grid-template-columns:1fr 1fr}}
+textarea,input,select{font:inherit;font-size:18px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);padding:8px 10px;width:100%}
+select{height:48px;padding:0 8px}
+input{height:48px}
+.grid9{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.grid9 label{display:block;background:var(--sky);border-radius:12px;padding:8px}
+.grid9 label span{display:block;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.grid9 select{margin-top:4px}
+.row2{display:grid;grid-template-columns:70px minmax(0,1fr) minmax(0,1.2fr);gap:6px;align-items:center;padding:6px 0;border-top:1px solid var(--line)}
+.row2:first-of-type{border-top:0}
+.row2 b{font-size:17px;color:var(--red);font-weight:900}
+.btn{display:block;width:100%;border:0;border-radius:12px;padding:14px;font-size:19px;font-weight:900;background:var(--blue);color:#fff;margin-top:10px}
+.btn.g{background:var(--sky);color:var(--navy)}
+.btn.r{background:#ffe4e0;color:var(--red)}
+.chips2{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.chips2 button{border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:9px 16px;font-size:18px;font-weight:900}
+.chips2 button.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.wr{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.wr input{width:150px;text-transform:uppercase;letter-spacing:2px;font-weight:900}
+.pre{margin-top:10px;border:2.5px dashed var(--blue);border-radius:14px;padding:12px}.pre .pt2{font-size:20px;font-weight:900;color:var(--navy);margin-bottom:4px}.chips2 button.on.r{background:var(--red);border-color:var(--red)}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;background:#94a3b8;margin-right:6px}
+.dot.on{background:#22c55e}
+</style></head><body>
+<div class="top"><h1 id="ttl">🏐 배구 작전판</h1><button data-v="game" class="on">경기</button><button data-v="setup">설정</button></div>
+<div class="page">
+
+<div id="vGame" class="game">
+ <div>
+  <div class="card" style="padding:10px">
+   <div class="courtwrap">
+    <div class="opp" id="opp"></div>
+    <div class="net"></div>
+    <div class="court" id="court"></div>
+   </div>
+   <div class="tools">
+    <button id="tgBtn">🎯 목적타 찍기</button>
+    <button id="resetPos">↺ 기본 위치</button>
+    <span id="planBtns" style="display:contents"></span>
+   </div>
+  </div>
+ </div>
+ <div>
+  <div class="card">
+   <div class="score">
+    <div class="side us"><div class="nm" id="usNm">우리</div><div class="pt" id="usPt">0</div><div class="sv" id="usSv"></div><button id="usPlus">+1</button></div>
+    <div class="mid"><div class="sl" id="setLbl">1세트</div><div class="sets" id="sets">0:0</div><button id="undo">↶ 취소</button></div>
+    <div class="side them"><div class="nm" id="thNm">상대</div><div class="pt" id="thPt">0</div><div class="sv" id="thSv"></div><button id="thPlus">+1</button></div>
+   </div>
+   <div class="prev" id="prev"></div>
+   <div class="t" id="wrInfo" style="text-align:center;margin-top:4px"></div>
+   <div class="serve" id="serve"></div>
+   <div id="banner"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+   <h2>서브 순서</h2>
+   <div class="t">우리</div><div class="order" id="ordUs"></div>
+   <div class="t" style="margin-top:8px">상대</div><div class="order them" id="ordTh"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+   <h2>교체 <span class="cnt" id="subCnt">0 / 6</span></h2>
+   <div class="t">벤치 선수를 누르고 → 코트에서 나갈 선수를 눌러요</div>
+   <div class="bench" id="bench"></div>
+   <div class="msg" id="msg"></div>
+   <div class="log" id="subLog"></div>
+  </div>
+ </div>
+</div>
+
+<div id="vSetup" class="set" hidden>
+ <div class="card">
+  <h2>👥 우리 선수 명단</h2>
+  <div class="t">한 줄에 한 명 · «등번호 이름» (이름은 빼도 돼요, 이 기기에만 저장)</div>
+  <textarea id="roster" rows="9" placeholder="1 주장&#10;2&#10;3"></textarea>
+  <input id="usName" placeholder="우리 팀 이름" style="margin-top:8px">
+  <button class="btn" id="rosterSave">명단 저장</button>
+ </div>
+ <div class="card">
+  <h2>📋 플랜 (스타팅 · 서브 순서)</h2>
+  <div class="chips2" id="planTabs"></div>
+  <div class="t" style="margin-top:8px">자리마다 선수와 서브 순서를 골라요. 코트에서 옮긴 위치도 «지금 코트 위치로 저장»으로 넣을 수 있어요.</div>
+  <div class="grid9" id="planGrid" style="margin-top:8px"></div>
+  <button class="btn" id="planSave">이 플랜 저장</button>
+  <button class="btn g" id="planFromCourt">지금 코트 위치·선수로 저장</button>
+  <button class="btn g" id="planApply">지금 세트에 적용</button>
+  <div class="msg" id="planMsg"></div>
+ </div>
+ <div class="card">
+  <h2>🎯 상대 서브 · 목적타</h2>
+  <div class="chips2" id="oppTabs"></div>
+  <input id="oppName" placeholder="상대 팀 이름" style="margin-top:8px">
+  <div class="t" style="margin-top:8px">서브 순서대로 상대 등번호와 노리는 자리를 넣어요. 경기 중 🎯 버튼으로 코트에 바로 찍어도 돼요.</div>
+  <div id="oppRows" style="margin-top:6px"></div>
+  <button class="btn" id="oppSave">상대 저장</button>
+  <button class="btn g" id="oppAdd">상대 팀 하나 더</button>
+ </div>
+ <div class="card">
+  <h2>📡 위리 점수 연결</h2>
+  <div class="t">위리 경기 코드(6자리)를 넣으면 점수가 자동으로 따라와요. 이때 +1 버튼은 꺼져요.</div>
+  <div class="wr" style="margin-top:8px"><input id="wrCode" maxlength="6" placeholder="코드"><select id="wrSide" style="width:auto"><option value="home">우리 = 왼쪽(홈)</option><option value="away">우리 = 오른쪽(원정)</option></select></div>
+  <button class="btn" id="wrOn">연결</button><button class="btn r" id="wrOff">연결 끊고 직접 입력</button>
+  <div class="t" id="wrStat" style="margin-top:8px"></div>
+  <h3>경기 규칙</h3>
+  <div class="t">1·2세트 21점, 3세트 15점, 듀스 2점 차(상한 없음) · 교체 세트당 6회</div>
+  <h3>새 경기</h3>
+  <div class="t">점수·교체 기록만 지워요. 명단·플랜·상대 정보는 남아요.</div>
+  <button class="btn r" id="newGame">새 경기 시작</button>
+ </div>
+</div>
+</div>
+<script>
+var LS={get:function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+var ZN=['전위 레프트','전위 센터','전위 라이트','중위 레프트','중위 센터','중위 라이트','후위 레프트','후위 센터','후위 라이트'];
+var ZS=['전L','전C','전R','중L','중C','중R','후L','후C','후R'];
+var ZP=[[18,17],[50,17],[82,17],[18,50],[50,50],[82,50],[18,83],[50,83],[82,83]];
+function defPos(){return ZP.map(function(p){return {x:p[0],y:p[1]}})}
+function blankPlan(nm){return {nm:nm,p:['','','','','','','','',''],o:[1,2,3,4,5,6,7,8,9],pos:defPos()}}
+var D=LS.get('vbt_v1',null)||{us:'인천영종고',roster:[],plans:[blankPlan('플랜 A'),blankPlan('플랜 B')],opps:[{nm:'상대 1',ord:['','','','','','','','',''],tg:{}}],oppI:0,sets:[],pts:[],subs:[],wr:{code:'',side:'home'}};
+function save(){LS.set('vbt_v1',D)}
+function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return '&#'+c.charCodeAt(0)+';'})}
+function nmOf(n){var r=D.roster.find(function(x){return x.n===n});return r&&r.nm?r.nm:''}
+function newSet(prev){var pl=D.plans[0];var src=prev||{start:pl.p.slice(),order:orderFromPlan(pl),pos:JSON.parse(JSON.stringify(pl.pos))};
+ return {start:src.start.slice(),order:src.order.slice(),pos:JSON.parse(JSON.stringify(src.pos)),first:prev?(prev.first==='us'?'them':'us'):'us'}}
+function orderFromPlan(pl){var a=[0,1,2,3,4,5,6,7,8];a.sort(function(x,y){return (+pl.o[x]||99)-(+pl.o[y]||99)});return a}
+if(!D.sets.length)D.sets.push(newSet(null));
+
+// ---- 경기 계산 ----
+var WR=null; // 위리 이벤트로 만든 점수 목록
+function rules(si){var r=WR&&WR.rules;var g=r&&r.gamesToWin?r.gamesToWin:2,max=g*2-1;var tgt=(si===max-1)?((r&&r.lastGamePoints)||15):((r&&r.points)||21);return {tgt:tgt,g:g,cap:r&&r.cap}}
+function ptsList(){return WR?WR.pts:D.pts}
+function setWon(a,b,si){var r=rules(si);return (a>=r.tgt&&a-b>=2)||(r.cap&&a>=r.cap&&a>b)}
+function calc(){var P=ptsList(),res={sets:[],usSets:0,thSets:0},cur=0;
+ var ps=P.filter(function(p){return p.s===undefined});
+ // 세트별 점수
+ var by={};P.forEach(function(p){(by[p.s]=by[p.s]||[]).push(p)});
+ var nSets=WR?WR.n:D.sets.length;
+ for(var s=0;s<nSets;s++){var a=0,b=0,arr=by[s]||[];arr.forEach(function(p){if(p.w==='us')a++;else if(p.w==='them')b++});
+  var done=setWon(a,b,s)||setWon(b,a,s)||(WR&&WR.closed[s]);res.sets.push({us:a,th:b,done:!!done,arr:arr});if(done){if(a>b)res.usSets++;else if(b>a)res.thSets++}}
+ res.cur=nSets-1;var g=rules(0).g;res.over=res.usSets>=g||res.thSets>=g;return res}
+function lineup(si,uptoSub){var st=D.sets[si],L=st.start.slice();D.subs.forEach(function(x,i){if(x.s===si&&(uptoSub==null||i<uptoSub))L[x.slot]=x.inn});return L}
+function serveState(si,arr){var st=D.sets[si],serving=st.first,iu=st.first==='us'?0:-1,it=st.first==='them'?0:-1;
+ arr.forEach(function(p){var w=p.w||p.sv;if(p.sv){if(p.sv!==serving){serving=p.sv;if(serving==='us')iu++;else it++}return}
+  if(w!==serving){serving=w;if(w==='us')iu++;else it++}});
+ return {serving:serving,iu:Math.max(0,iu)%9,it:Math.max(0,it)%9,iuRaw:iu,itRaw:it}}
+
+// ---- 화면 ----
+var view='game',pickBench=null,tgMode=false;
+document.querySelectorAll('.top button').forEach(function(b){b.onclick=function(){view=b.dataset.v;document.querySelectorAll('.top button').forEach(function(x){x.classList.toggle('on',x===b)});document.getElementById('vGame').hidden=view!=='game';document.getElementById('vSetup').hidden=view!=='setup';if(view==='setup')renderSetup();else render();scrollTo(0,0)}});
+function opp(){return D.opps[D.oppI]||D.opps[0]}
+function render(){var c=calc(),si=c.cur;while(D.sets.length<=si)D.sets.push(newSet(D.sets[D.sets.length-1]));
+ var S=c.sets[si],st=D.sets[si],sv=serveState(si,S.arr),L=lineup(si),O=opp();
+ document.getElementById('usNm').textContent=D.us||'우리';document.getElementById('thNm').textContent=O.nm||'상대';
+ document.getElementById('usPt').textContent=S.us;document.getElementById('thPt').textContent=S.th;
+ document.getElementById('sets').textContent=c.usSets+' : '+c.thSets;
+ document.getElementById('setLbl').textContent=(si+1)+'세트 · '+rules(si).tgt+'점';
+ document.getElementById('prev').textContent=c.sets.slice(0,si).map(function(x,i){return (i+1)+'세트 '+x.us+'-'+x.th}).join(' · ');
+ var manual=!WR;['usPlus','thPlus','undo'].forEach(function(id){document.getElementById(id).hidden=!manual});
+ document.getElementById('wrInfo').innerHTML=WR?'<span class="dot on"></span>위리 '+esc(D.wr.code)+' 점수 연결 중':'';
+ var usSrvSlot=st.order[sv.iu],usSrv=L[usSrvSlot],thSrvI=sv.it,thSrv=O.ord[thSrvI]||'';
+ document.getElementById('usSv').textContent=sv.serving==='us'?'🏐 서브':'';document.getElementById('thSv').textContent=sv.serving==='them'?'🏐 서브':'';
+ var se=document.getElementById('serve');se.className='serve '+sv.serving;
+ if(sv.serving==='us')se.innerHTML='🏐 우리 서브 · <span style="font-size:28px">#'+esc(usSrv||'?')+'</span> <small>'+esc(nmOf(usSrv))+' (서브 '+(sv.iu+1)+'번)</small>';
+ else{var tg=O.tg[thSrvI];se.innerHTML='⚠️ 상대 서브 · <span style="font-size:28px">'+(thSrv?'#'+esc(thSrv):(thSrvI+1)+'번 서버')+'</span>'+(tg?' <small>→ 🎯 '+esc(tg.z!=null?ZN[tg.z]:'코트 표시')+(tg.m?' · '+esc(tg.m):'')+'</small>':' <small>목적타 미설정</small>')}
+ // 배너
+ var bn='';if(c.over)bn='<div class="banner">경기 끝 · '+(c.usSets>c.thSets?'🎉 우리 승리':'상대 승리')+' ('+c.usSets+':'+c.thSets+')</div>';
+ else if(S.done&&manual)bn='<div class="banner">'+(si+1)+'세트 끝 ('+S.us+'-'+S.th+')<button id="nextSet">'+(si+2)+'세트 시작</button></div>';
+ document.getElementById('banner').innerHTML=bn;var ns=document.getElementById('nextSet');if(ns)ns.onclick=function(){D.sets.push(newSet(D.sets[si]));save();render();scrollTo(0,0)};
+ // 세트 시작 전 체크 (0:0일 때)
+ if(!S.arr.length&&!c.over){var pb='<div class="pre"><div class="pt2">'+(si+1)+'세트 시작 전 체크</div><div class="t">첫 서브</div><div class="chips2"><button data-first="us" class="'+(st.first==='us'?'on':'')+'">🏐 우리 서브</button><button data-first="them" class="'+(st.first==='them'?'on r':'')+'">상대 서브</button></div>';
+  pb+='<div class="t" style="margin-top:8px">스타팅 · 서브 순서</div><div class="chips2">'+D.plans.map(function(p,i){return '<button data-plan2="'+i+'">'+esc(p.nm)+'</button>'}).join('')+(si>0?'<button data-plan2="prev">'+si+'세트 그대로</button>':'')+'</div>';
+  pb+='<div class="t" style="margin-top:8px">우리 서브 순서: '+st.order.map(function(sl,i){return (i+1)+'번 #'+esc(L[sl]||'?')}).join(' · ')+'</div></div>';
+  document.getElementById('banner').innerHTML+=pb}
+ // 서브 순서 줄
+ document.getElementById('ordUs').innerHTML=st.order.map(function(sl,i){var n=L[sl];return '<span class="'+(sv.serving==='us'&&i===sv.iu?'now':'')+'"><small>'+(i+1)+'</small>'+esc(n||'?')+'</span>'}).join('');
+ document.getElementById('ordTh').innerHTML=O.ord.map(function(n,i){return '<span class="'+(sv.serving==='them'&&i===sv.it?'now':'')+'"><small>'+(i+1)+'</small>'+(n?esc(n):'-')+'</span>'}).join('');
+ // 코트
+ var oh='<span>'+esc(O.nm||'상대')+'</span>';if(sv.serving==='them')oh+='<span style="background:var(--red);border-radius:10px;padding:2px 10px">서브 #'+esc(thSrv||'?')+'</span>';document.getElementById('opp').innerHTML=oh;
+ var h='<div class="ln" style="top:33.3%"></div><div class="ln" style="top:66.6%"></div>';
+ ZP.forEach(function(p,i){h+='<div class="zl" style="left:'+p[0]+'%;top:'+(p[1]-12)+'%">'+ZN[i]+'</div>'});
+ if(sv.serving==='them'){var t=O.tg[thSrvI];if(t){var tx=t.z!=null?ZP[t.z][0]:t.x,ty=t.z!=null?ZP[t.z][1]:t.y;h+='<div class="tg" style="left:'+tx+'%;top:'+ty+'%"></div><div class="tgl" style="left:'+tx+'%;top:'+ty+'%">🎯 #'+esc(thSrv||thSrvI+1)+(t.m?' '+esc(t.m):'')+'</div>'}}
+ var subIn={};D.subs.forEach(function(x){if(x.s===si)subIn[x.inn]=1});
+ L.forEach(function(n,sl){var p=st.pos[sl],oi=st.order.indexOf(sl);
+  h+='<div class="chip'+(sv.serving==='us'&&sl===usSrvSlot?' srv':'')+(subIn[n]&&st.start.indexOf(n)<0?' subin':'')+'" data-sl="'+sl+'" style="left:'+p.x+'%;top:'+p.y+'%"><span class="o">'+(oi+1)+'</span><b>'+esc(n||'?')+'</b><i>'+esc(nmOf(n))+'</i></div>'});
+ document.getElementById('court').innerHTML=h;
+ document.getElementById('tgBtn').classList.toggle('on',tgMode);document.getElementById('tgBtn').textContent=tgMode?'코트를 눌러 목적타 위치 찍기 (#'+(thSrv||thSrvI+1)+')':'🎯 목적타 찍기';
+ document.getElementById('planBtns').innerHTML=D.plans.map(function(p,i){return '<button class="pl" data-plan="'+i+'">'+esc(p.nm)+' 적용</button>'}).join('');
+ renderBench(si,L)}
+function subInfo(si){var st=D.sets[si],list=D.subs.filter(function(x){return x.s===si});return {st:st,list:list}}
+function canSub(si,slot,inn){var I=subInfo(si),L=lineup(si),out=L[slot],starters=I.st.start;
+ if(I.list.length>=6)return '이번 세트 교체 6회를 다 썼어요';
+ if(L.indexOf(inn)>=0)return '#'+inn+'은(는) 이미 코트에 있어요';
+ if(starters.indexOf(out)>=0){
+  if(I.list.some(function(x){return x.out===out}))return '#'+out+'은(는) 이번 세트에 이미 한 번 나갔다 들어왔어요 (스타팅은 한 번만 교체)';
+  if(starters.indexOf(inn)>=0)return '#'+inn+'은(는) 자기 대신 들어간 선수와만 교대할 수 있어요';
+  if(I.list.some(function(x){return x.inn===inn}))return '#'+inn+'은(는) 이번 세트에 이미 뛰고 나왔어요';
+  return ''}
+ var orig=null;I.list.forEach(function(x){if(x.inn===out)orig=x.out});
+ if(orig!==inn)return '#'+out+' 자리는 원래 스타팅 #'+orig+'만 다시 들어올 수 있어요';
+ return ''}
+function renderBench(si,L){var I=subInfo(si),h='';
+ D.roster.forEach(function(r){if(L.indexOf(r.n)>=0)return;var anyOk=L.some(function(_,sl){return !canSub(si,sl,r.n)});
+  h+='<button data-bn="'+esc(r.n)+'" class="'+(pickBench===r.n?'pick':'')+(anyOk?'':' no')+'"><b>'+esc(r.n)+'</b><i>'+esc(r.nm)+'</i></button>'});
+ document.getElementById('bench').innerHTML=h||'<span class="t">설정에서 선수 명단을 넣어 주세요</span>';
+ var c=document.getElementById('subCnt');c.textContent=I.list.length+' / 6';c.className='cnt'+(I.list.length>=6?' full':'');
+ document.getElementById('subLog').innerHTML=I.list.map(function(x,i){return '<div>🔁 <b>#'+esc(x.out)+'</b> 나감 → <b>#'+esc(x.inn)+'</b> 들어감 <span class="t">('+x.at+')</span>'+(i===I.list.length-1?'<button data-undosub="1">되돌리기</button>':'')+'</div>'}).join('');
+ document.querySelectorAll('.chip').forEach(function(ch){ch.classList.toggle('pick',!!pickBench&&!canSub(si,+ch.dataset.sl,pickBench))})}
+function say(t,ok){var m=document.getElementById('msg');m.textContent=t;m.className='msg'+(ok?' ok':'');clearTimeout(say.t);say.t=setTimeout(function(){m.textContent=''},5000)}
+document.getElementById('bench').onclick=function(e){var b=e.target.closest('[data-bn]');if(!b)return;pickBench=pickBench===b.dataset.bn?null:b.dataset.bn;
+ if(pickBench)say('#'+pickBench+' 들어갈 자리: 코트에서 나갈 선수를 누르세요',true);render()};
+document.getElementById('subLog').onclick=function(e){if(!e.target.closest('[data-undosub]'))return;var si=calc().cur;for(var i=D.subs.length-1;i>=0;i--)if(D.subs[i].s===si){D.subs.splice(i,1);break}save();render()};
+// 코트 끌기 / 교체 / 목적타
+var drag=null,court=document.getElementById('court');
+court.addEventListener('pointerdown',function(e){var si=calc().cur,r=court.getBoundingClientRect();
+ if(tgMode){var x=Math.round((e.clientX-r.left)/r.width*100),y=Math.round((e.clientY-r.top)/r.height*100),c=calc(),sv=serveState(si,c.sets[si].arr),O=opp(),k=sv.it;O.tg[k]={x:x,y:y,z:null,m:(O.tg[k]&&O.tg[k].m)||''};tgMode=false;save();say('상대 '+(O.ord[k]?'#'+O.ord[k]:(k+1)+'번 서버')+' 목적타 저장',true);render();return}
+ var ch=e.target.closest('.chip');if(!ch)return;var sl=+ch.dataset.sl;
+ if(pickBench){var why=canSub(si,sl,pickBench);if(why){say(why);return}var L=lineup(si),c2=calc();D.subs.push({s:si,slot:sl,out:L[sl],inn:pickBench,at:c2.sets[si].us+'-'+c2.sets[si].th});say('#'+L[sl]+' → #'+pickBench+' 교체',true);pickBench=null;save();render();return}
+ drag={sl:sl,el:ch,r:r,moved:false};ch.setPointerCapture(e.pointerId);ch.style.zIndex=5;e.preventDefault()});
+court.addEventListener('pointermove',function(e){if(!drag)return;var x=Math.min(96,Math.max(4,(e.clientX-drag.r.left)/drag.r.width*100)),y=Math.min(96,Math.max(4,(e.clientY-drag.r.top)/drag.r.height*100));drag.el.style.left=x+'%';drag.el.style.top=y+'%';drag.x=x;drag.y=y;drag.moved=true});
+function endDrag(){if(!drag)return;if(drag.moved){var st=D.sets[calc().cur];st.pos[drag.sl]={x:Math.round(drag.x),y:Math.round(drag.y)};save()}drag=null;render()}
+court.addEventListener('pointerup',endDrag);court.addEventListener('pointercancel',endDrag);
+document.getElementById('tgBtn').onclick=function(){var c=calc(),sv=serveState(c.cur,c.sets[c.cur].arr);tgMode=!tgMode;if(tgMode&&sv.serving!=='them')say('지금은 우리 서브예요. 다음 상대 서버('+(serveState(c.cur,c.sets[c.cur].arr).it+1)+'번) 목적타로 저장돼요',true);render()};
+document.getElementById('resetPos').onclick=function(){D.sets[calc().cur].pos=defPos();save();render()};
+document.getElementById('banner').addEventListener('click',function(e){var f=e.target.closest('[data-first]'),p=e.target.closest('[data-plan2]'),si=calc().cur;if(f){D.sets[si].first=f.dataset.first;save();render()}else if(p){if(p.dataset.plan2==='prev'){var pv=D.sets[si-1],st=D.sets[si];st.start=pv.start.slice();st.order=pv.order.slice();st.pos=JSON.parse(JSON.stringify(pv.pos));save();say(si+'세트 스타팅 그대로',true);render()}else applyPlan(+p.dataset.plan2)}});
+document.getElementById('planBtns').onclick=function(e){var b=e.target.closest('[data-plan]');if(!b)return;applyPlan(+b.dataset.plan)};
+function applyPlan(i){var c=calc(),si=c.cur,pl=D.plans[i];if(pl.p.filter(Boolean).length<9){say(pl.nm+'에 9명이 다 안 들어가 있어요 (설정에서 채우기)');return}
+ if(c.sets[si].arr.length||D.subs.some(function(x){return x.s===si})){if(!confirm('이번 세트에 점수나 교체 기록이 있어요. 그래도 '+pl.nm+'(으)로 스타팅을 바꿀까요? 이번 세트 교체 기록은 지워져요.'))return;D.subs=D.subs.filter(function(x){return x.s!==si})}
+ var st=D.sets[si];st.start=pl.p.slice();st.order=orderFromPlan(pl);st.pos=JSON.parse(JSON.stringify(pl.pos));save();say(pl.nm+' 적용',true);render()}
+// 점수
+function addPt(w){if(WR)return;var c=calc();if(c.over)return;if(c.sets[c.cur].done){say('세트가 끝났어요. «다음 세트 시작»을 누르세요');return}D.pts.push({s:c.cur,w:w});save();render()}
+document.getElementById('usPlus').onclick=function(){addPt('us')};document.getElementById('thPlus').onclick=function(){addPt('them')};
+document.getElementById('undo').onclick=function(){var c=calc();if(D.pts.length&&D.pts[D.pts.length-1].s===c.cur)D.pts.pop();else if(!c.sets[c.cur].arr.length&&D.sets.length>1&&!D.subs.some(function(x){return x.s===c.cur})){D.sets.pop()}save();render()};
+
+// ---- 설정 ----
+var planI=0,oppEdit=D.oppI;
+function renderSetup(){document.getElementById('roster').value=D.roster.map(function(r){return r.n+(r.nm?' '+r.nm:'')}).join('\n');document.getElementById('usName').value=D.us||'';
+ document.getElementById('planTabs').innerHTML=D.plans.map(function(p,i){return '<button data-pi="'+i+'" class="'+(i===planI?'on':'')+'">'+esc(p.nm)+'</button>'}).join('')+'<button data-pi="new">+ 플랜</button>';
+ var pl=D.plans[planI],opt=function(v){return '<option value="">-</option>'+D.roster.map(function(r){return '<option value="'+esc(r.n)+'"'+(r.n===v?' selected':'')+'>#'+esc(r.n)+(r.nm?' '+esc(r.nm):'')+'</option>'}).join('')};
+ document.getElementById('planGrid').innerHTML=ZN.map(function(z,i){var o='';for(var k=1;k<=9;k++)o+='<option value="'+k+'"'+(+pl.o[i]===k?' selected':'')+'>서브 '+k+'번</option>';return '<label><span>'+z+'</span><select data-pp="'+i+'">'+opt(pl.p[i])+'</select><select data-po="'+i+'">'+o+'</select></label>'}).join('');
+ document.getElementById('oppTabs').innerHTML=D.opps.map(function(p,i){return '<button data-oi="'+i+'" class="'+(i===oppEdit?'on':'')+'">'+esc(p.nm||'상대 '+(i+1))+(i===D.oppI?' ✓':'')+'</button>'}).join('');
+ var O=D.opps[oppEdit];document.getElementById('oppName').value=O.nm||'';
+ document.getElementById('oppRows').innerHTML=O.ord.map(function(n,i){var t=O.tg[i]||{},zo='<option value="">목적타 없음</option>'+ZN.map(function(z,k){return '<option value="'+k+'"'+(t.z===k?' selected':'')+'>'+z+'</option>'}).join('')+(t.x!=null&&t.z==null?'<option value="c" selected>코트에 찍은 곳</option>':'');
+  return '<div class="row2"><b>서브 '+(i+1)+'</b><input data-on="'+i+'" value="'+esc(n)+'" placeholder="등번호" inputmode="numeric"><select data-oz="'+i+'">'+zo+'</select><span></span><input data-om="'+i+'" value="'+esc(t.m||'')+'" placeholder="메모 (강서브, 짧게 등)" style="grid-column:2/4"></div>'}).join('')}
+document.getElementById('rosterSave').onclick=function(){var seen={};D.roster=document.getElementById('roster').value.split('\n').map(function(l){var m=l.trim().match(/^#?(\d{1,2})\s*(.*)$/);return m?{n:m[1],nm:m[2].trim().slice(0,8)}:null}).filter(function(r){if(!r||seen[r.n])return false;seen[r.n]=1;return true});
+ D.us=document.getElementById('usName').value.trim()||'우리';save();renderSetup();document.getElementById('planMsg').textContent='';alertOk('rosterSave','✅ '+D.roster.length+'명 저장')};
+function alertOk(id,t){var b=document.getElementById(id),o=b.dataset.o||b.textContent;b.dataset.o=o;b.textContent=t;setTimeout(function(){b.textContent=o},1500)}
+document.getElementById('planTabs').onclick=function(e){var b=e.target.closest('[data-pi]');if(!b)return;if(b.dataset.pi==='new'){D.plans.push(blankPlan('플랜 '+String.fromCharCode(65+D.plans.length)));planI=D.plans.length-1;save()}else planI=+b.dataset.pi;renderSetup()};
+document.getElementById('planSave').onclick=function(){var pl=D.plans[planI],m=document.getElementById('planMsg');
+ var p=[],o=[];document.querySelectorAll('[data-pp]').forEach(function(s){p[+s.dataset.pp]=s.value});document.querySelectorAll('[data-po]').forEach(function(s){o[+s.dataset.po]=+s.value});
+ var dupP=p.filter(Boolean).some(function(v,i,a){return a.indexOf(v)!==i}),dupO=o.some(function(v,i,a){return a.indexOf(v)!==i});
+ if(dupP){m.textContent='⚠️ 같은 선수가 두 자리에 있어요';return}if(dupO){m.textContent='⚠️ 서브 순서 번호가 겹쳐요';return}
+ pl.p=p;pl.o=o;save();m.className='msg ok';m.textContent='✅ '+pl.nm+' 저장 ('+p.filter(Boolean).length+'/9명)'};
+document.getElementById('planFromCourt').onclick=function(){var si=calc().cur,st=D.sets[si],pl=D.plans[planI],L=lineup(si);pl.p=L.slice();pl.pos=JSON.parse(JSON.stringify(st.pos));var o=[];st.order.forEach(function(sl,i){o[sl]=i+1});pl.o=o;save();renderSetup();var m=document.getElementById('planMsg');m.className='msg ok';m.textContent='✅ 지금 코트를 '+pl.nm+'(으)로 저장'};
+document.getElementById('planApply').onclick=function(){document.getElementById('planSave').click();applyPlan(planI);document.querySelector('.top button[data-v=game]').click()};
+document.getElementById('oppTabs').onclick=function(e){var b=e.target.closest('[data-oi]');if(!b)return;oppEdit=+b.dataset.oi;renderSetup()};
+document.getElementById('oppSave').onclick=function(){var O=D.opps[oppEdit];O.nm=document.getElementById('oppName').value.trim()||('상대 '+(oppEdit+1));
+ document.querySelectorAll('[data-on]').forEach(function(x){O.ord[+x.dataset.on]=x.value.replace(/\D/g,'').slice(0,2)});
+ document.querySelectorAll('[data-oz]').forEach(function(x){var i=+x.dataset.oz,m=document.querySelector('[data-om="'+i+'"]').value.trim().slice(0,20),old=O.tg[i]||{};
+  if(x.value==='')delete O.tg[i];else if(x.value==='c')O.tg[i]={x:old.x,y:old.y,z:null,m:m};else O.tg[i]={z:+x.value,m:m}});
+ D.oppI=oppEdit;save();renderSetup();alertOk('oppSave','✅ 저장 · 경기에서 이 상대 사용')};
+document.getElementById('oppAdd').onclick=function(){D.opps.push({nm:'상대 '+(D.opps.length+1),ord:['','','','','','','','',''],tg:{}});oppEdit=D.opps.length-1;save();renderSetup()};
+document.getElementById('newGame').onclick=function(){if(!confirm('점수와 교체 기록을 지우고 새 경기를 시작할까요?'))return;D.pts=[];D.subs=[];D.sets=[newSet(null)];save();alertOk('newGame','✅ 새 경기')};
+
+// ---- 위리 연결 ----
+var RT='https://matchmaker-28187-default-rtdb.asia-southeast1.firebasedatabase.app/wereplay/',es=null;
+function foldWR(info,events){var us=D.wr.side,ev=Object.keys(events||{}).map(function(k){var e=events[k];e._k=k;return e}).sort(function(a,b){return a.at-b.at});
+ var undone={};ev.forEach(function(e){if(e.kind&&e.kind.t==='undo')undone[e.kind.ref]=1});
+ var tmp={rules:info&&info.rules,pts:[],closed:{}};WR=tmp;var s=0,a=0,b=0;
+ ev.forEach(function(e){var k=e.kind||{};if(undone[e._k]||undone[e.id]||k.t==='undo')return;
+  if(k.t==='point'||k.t==='add'){var w=k.side===us?'us':'them',v=k.t==='add'?(k.v||1):1;for(var i=0;i<v;i++){tmp.pts.push({s:s,w:w});if(w==='us')a++;else b++}
+   if(setWon(a,b,s)||setWon(b,a,s)){s++;a=0;b=0}}
+  else if(k.t==='next'){if(a||b){tmp.closed[s]=1;s++;a=0;b=0}}
+  else if(k.t==='serve'){tmp.pts.push({s:s,sv:k.side===us?'us':'them'})}});
+ tmp.n=s+1;
+ if(info&&info.firstServer&&!D.wr.firstSet){D.sets[0].first=info.firstServer===us?'us':'them';D.wr.firstSet=1;save()}
+ WR=tmp}
+function wrPull(){var code=D.wr.code;Promise.all([fetch(RT+code+'/info.json').then(function(r){return r.json()}),fetch(RT+code+'/events.json').then(function(r){return r.json()})]).then(function(x){
+  if(!x[0]){document.getElementById('wrStat').textContent='⚠️ 그런 경기 코드가 없어요';return}
+  foldWR(x[0],x[1]);var h=x[0].home||{},w=x[0].away||{};document.getElementById('wrStat').innerHTML='<span class="dot on"></span>연결됨 · '+esc(h.name||'홈')+' vs '+esc(w.name||'원정')+' · 이벤트 '+Object.keys(x[1]||{}).length+'개';render()}).catch(function(){document.getElementById('wrStat').textContent='⚠️ 연결 실패 (인터넷 확인)'})}
+function wrStart(){if(es){es.close();es=null}if(!/^[A-Z0-9]{6}$/.test(D.wr.code))return;wrPull();
+ if(window.EventSource&&!/nosse/.test(location.search)){try{es=new EventSource(RT+D.wr.code+'/events.json');var t=null,f=function(){clearTimeout(t);t=setTimeout(wrPull,250)};es.addEventListener('put',f);es.addEventListener('patch',f)}catch(e){}}}
+document.getElementById('wrOn').onclick=function(){D.wr.code=document.getElementById('wrCode').value.trim().toUpperCase();D.wr.side=document.getElementById('wrSide').value;D.wr.firstSet=0;save();document.getElementById('wrStat').textContent='연결 중...';wrStart()};
+document.getElementById('wrOff').onclick=function(){if(es){es.close();es=null}WR=null;D.wr.code='';save();document.getElementById('wrStat').textContent='직접 입력 모드';document.getElementById('wrCode').value='';render()};
+document.getElementById('wrCode').value=D.wr.code||'';document.getElementById('wrSide').value=D.wr.side||'home';
+render();if(D.wr.code)wrStart();
+</script>
+</body></html>
