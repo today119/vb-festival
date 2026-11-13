@@ -176,7 +176,7 @@ input{height:48px}
   <div class="mid"><div class="sl" id="setLbl">1세트</div><div class="sets" id="sets">0 : 0</div><div class="prev" id="prev"></div><button id="undo">↶ 취소</button></div>
   <div class="sb them"><div class="pt" id="thPt">0</div><div class="nmw"><div class="nm" id="thNm">상대</div><div class="sv" id="thSv"></div></div><button id="thPlus">+1</button></div>
  </div>
- <div class="t" id="wrInfo" style="text-align:center"></div>
+ <div class="t" id="wrInfo" style="text-align:center"></div><div class="t" id="syncStat" style="position:fixed;right:10px;bottom:6px;font-size:12px;z-index:9"></div>
  <div class="serve" id="serve"></div>
  <div id="banner"></div>
  <div class="board"><div class="srv" id="srvL"></div><div class="fc" id="court"></div><div class="srv" id="srvR"></div></div>
@@ -239,6 +239,7 @@ input{height:48px}
 </div>
 </div>
 <script>
+var BOOT=true;
 var LS={get:function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 var ZN=['레프트','센터','라이트','앞차','세터','빽차','레프트빽','센터빽','라이트빽'];
 var ZS=ZN;
@@ -250,7 +251,17 @@ var ZP=[[18,17],[50,17],[82,17],[18,50],[50,50],[82,50],[18,83],[50,83],[82,83]]
 function defPos(){return ZP.map(function(p){return {x:p[0],y:p[1]}})}
 function blankPlan(nm){return {nm:nm,p:['','','','','','','','',''],o:[1,2,3,4,5,6,7,8,9],pos:defPos()}}
 var D=LS.get('vbt_v1',null)||{us:'인천영종고',roster:[],plans:[blankPlan('플랜 A'),blankPlan('플랜 B')],opps:[{nm:'상대 1',ord:['','','','','','','','',''],tg:{}}],oppI:0,sets:[],pts:[],subs:[],wr:{code:'',side:'home'}};
-function save(){LS.set('vbt_v1',D)}
+function save(){if(!BOOT)D.at=Date.now();LS.set('vbt_v1',D);syncPush()}
+// ---- 서버 동기화: 전체 상태를 비밀번호로 암호화해서 한 덩어리로 (이름은 서버에서도 못 읽음) ----
+var SY='https://matchmaker-28187-default-rtdb.asia-southeast1.firebasedatabase.app/vb_festival/tactic',SPIN=LS.get('vbt_pin',''),SKEY=null,SSALT=null,SPT=null,SST='';
+function b64e(u){return btoa(String.fromCharCode.apply(null,new Uint8Array(u)))}function b64d(t){return Uint8Array.from(atob(t),function(c){return c.charCodeAt(0)})}
+function skey(salt){if(SKEY&&SSALT===salt)return Promise.resolve(SKEY);return crypto.subtle.importKey('raw',new TextEncoder().encode(SPIN),'PBKDF2',false,['deriveKey']).then(function(k){return crypto.subtle.deriveKey({name:'PBKDF2',salt:b64d(salt),iterations:200000,hash:'SHA-256'},k,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}).then(function(k){SKEY=k;SSALT=salt;return k})}
+function syncStat(t){SST=t;var e=document.getElementById('syncStat');if(e)e.textContent=t}
+function syncPush(){if(!SPIN)return;clearTimeout(SPT);SPT=setTimeout(function(){var salt=SSALT||b64e(crypto.getRandomValues(new Uint8Array(18))),iv=crypto.getRandomValues(new Uint8Array(12)),at=D.at;
+ skey(salt).then(function(k){return crypto.subtle.encrypt({name:'AES-GCM',iv:iv},k,new TextEncoder().encode(JSON.stringify(D)))}).then(function(c){return fetch(SY+'.json',{method:'PUT',body:JSON.stringify({c:b64e(c),iv:b64e(iv),salt:salt,at:at})})}).then(function(r){if(!r.ok)throw 0;syncStat('☁️ 저장됨')}).catch(function(){syncStat('⚠️ 서버 저장 실패 (이 기기엔 저장됨)')})},700)}
+function syncPull(){if(!SPIN)return Promise.resolve();return fetch(SY+'.json').then(function(r){return r.json()}).then(function(rec){if(!rec){syncPush();return}
+ if((D.at||0)>=rec.at){if((D.at||0)>rec.at)syncPush();syncStat('☁️ 연결됨');return}
+ return skey(rec.salt).then(function(k){return crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(rec.iv)},k,b64d(rec.c))}).then(function(p){var o=JSON.parse(new TextDecoder().decode(p));o.at=rec.at;D=o;LS.set('vbt_v1',D);syncStat('☁️ 연결됨');if(typeof render==='function'){if(view==='setup')renderSetup();else render()}})}).catch(function(){syncStat('⚠️ 비밀번호가 다르거나 연결 실패');if(SPIN&&!SKEY){}})}
 function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return '&#'+c.charCodeAt(0)+';'})}
 function nmOf(n){var r=D.roster.find(function(x){return x.n===n});return r&&r.nm?r.nm:''}
 function newSet(prev){var pl=D.plans[0];var src=prev||{start:pl.p.slice(),order:orderFromPlan(pl),pos:JSON.parse(JSON.stringify(pl.pos))};
@@ -464,6 +475,11 @@ function wrStart(){if(es){es.close();es=null}if(!/^[A-Z0-9]{6}$/.test(D.wr.code)
 document.getElementById('wrOn').onclick=function(){D.wr.code=document.getElementById('wrCode').value.trim().toUpperCase();D.wr.side=document.getElementById('wrSide').value;D.wr.firstSet=0;save();document.getElementById('wrStat').textContent='연결 중...';wrStart()};
 document.getElementById('wrOff').onclick=function(){if(es){es.close();es=null}WR=null;D.wr.code='';save();document.getElementById('wrStat').textContent='직접 입력 모드';document.getElementById('wrCode').value='';render()};
 document.getElementById('wrCode').value=D.wr.code||'';document.getElementById('wrSide').value=D.wr.side||'home';
-render();if(D.wr.code)wrStart();
+render();BOOT=false;if(D.wr.code)wrStart();
+function syncStart(){syncPull();if(window.EventSource&&!/nosse/.test(location.search)){try{var es2=new EventSource(SY+'.json'),t2=null,f2=function(){clearTimeout(t2);t2=setTimeout(syncPull,300)};es2.addEventListener('put',f2);es2.addEventListener('patch',f2)}catch(e){}}}
+if(SPIN)syncStart();else if(!/^#imp=/.test(location.hash)){var zz=document.getElementById('zoom');zz.innerHTML='<div class="zh">☁️ 작전판 불러오기</div><div class="zt">비밀번호를 한 번 넣으면 이 기기도 같은 작전판(명단·플랜·기록)을 써요</div><input id="sPin" type="password" inputmode="numeric" style="width:220px;height:60px;font-size:28px;text-align:center"><div class="zb"><button id="sOk">연결</button><button data-zx="close">나중에</button></div><div class="zt" id="sMsg"></div>';zz.hidden=false;
+ document.getElementById('sOk').onclick=function(){var pin=document.getElementById('sPin').value.trim();if(pin.length<4)return;fetch(SY+'.json').then(function(r){return r.json()}).then(function(rec){SPIN=pin;SKEY=null;SSALT=null;if(!rec){LS.set('vbt_pin',pin);zz.hidden=true;syncStart();return}
+  return skey(rec.salt).then(function(k){return crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(rec.iv)},k,b64d(rec.c))}).then(function(){LS.set('vbt_pin',pin);D.at=0;zz.hidden=true;syncStart()})}).catch(function(){SPIN='';SKEY=null;document.getElementById('sMsg').textContent='비밀번호가 달라요'})}}
+
 </script>
 </body></html>
