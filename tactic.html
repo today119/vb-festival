@@ -137,8 +137,8 @@ input{height:48px}
 .fc .net{position:absolute;left:66%;top:-14px;bottom:-14px;width:10px;margin-left:-5px;background:repeating-linear-gradient(0deg,#fff 0 6px,#333 6px 12px);border:2px solid #fff;border-radius:4px;z-index:3;height:auto}
 .fc .vl{position:absolute;top:0;bottom:0;border-left:2px dashed rgba(255,255,255,.55)}
 .fc .hl{position:absolute;left:0;width:66%;border-top:2px dashed rgba(255,255,255,.55)}
-.fc .oz{position:absolute;width:11.33%;height:33.33%;border:1px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:rgba(255,255,255,.85);text-align:center;cursor:pointer;background:var(--court2)}
-.fc .oz.hit{background:rgba(250,204,21,.92);color:#3d2e00;font-weight:900;flex-direction:column;line-height:1}.fc .oz.hit big{font-size:clamp(34px,5vw,64px);font-weight:900}.fc .oz.hit small{font-size:15px}
+.fc .oz big{font-size:clamp(30px,4.2vw,54px);font-weight:900;line-height:1;color:rgba(255,255,255,.95)}.fc .oz{flex-direction:column;position:absolute;width:11.33%;height:33.33%;border:1px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:rgba(255,255,255,.85);text-align:center;cursor:pointer;background:var(--court2)}
+.fc .oz.hit{background:rgba(250,204,21,.92);color:#3d2e00;font-weight:900;flex-direction:column;line-height:1}.fc .oz.hit big{font-size:clamp(40px,6vw,78px);color:#3d2e00}.fc .oz.hit small{font-size:15px}
 .fc .zl{font-size:12px}
 .srv{display:flex;align-items:center;justify-content:center;min-height:64px}
 .srv span{width:64px;height:64px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;font-size:24px;line-height:1}
@@ -154,7 +154,7 @@ input{height:48px}
 .zoom{position:fixed;inset:0;z-index:50;background:rgba(10,20,40,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:12px}
 .zoom .zh{color:#fff;font-size:30px;font-weight:900;text-align:center}
 .zoom .zg{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);width:min(94vw,calc((100dvh - 190px)*1.5));aspect-ratio:3/2;border:6px solid #fff;border-left:14px solid #333;border-radius:10px;overflow:hidden;background:var(--court2)}
-.zoom .zg div{border:2px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;font-weight:700;cursor:pointer;text-align:center}
+.zoom .zg.fl{border-left:6px solid #fff;border-right:14px solid #333}.zoom .zg div{flex-direction:column;border:2px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;font-weight:700;cursor:pointer;text-align:center}
 .zoom .zg div.hit{background:var(--yel);color:#3d2e00;font-size:56px;font-weight:900}
 .zoom .zb{display:flex;gap:10px}.zoom .zb button{border:0;border-radius:14px;padding:14px 26px;font-size:22px;font-weight:900;background:#fff;color:#14306b}
 .zoom .zt{color:#ffe680;font-size:20px;font-weight:700}
@@ -238,6 +238,7 @@ input{height:48px}
 var LS={get:function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 var ZN=['전위 레프트','전위 센터','전위 라이트','중위 레프트','중위 센터','중위 라이트','후위 레프트','후위 센터','후위 라이트'];
 var ZS=['전L','전C','전R','중L','중C','중R','후L','후C','후R'];
+function zno(k){var c=k%3,r=Math.floor(k/3);return r*3+(D.flip?2-c:c)+1}
 function fx(X){return D.flip?100-X:X}
 var OZ=['앞 위','중간 위','뒤 위','앞 가운데','중간 가운데','뒤 가운데','앞 아래','중간 아래','뒤 아래'];
 var ZP=[[18,17],[50,17],[82,17],[18,50],[50,50],[82,50],[18,83],[50,83],[82,83]];
@@ -287,7 +288,7 @@ function render(){var c=calc(),si=c.cur;while(D.sets.length<=si)D.sets.push(newS
  var usSrvSlot=st.order[sv.iu],usSrv=L[usSrvSlot],thSrvI=sv.it,thSrv=O.ord[thSrvI]||'';
  document.getElementById('usSv').textContent=sv.serving==='us'?'🏐 서브':'';document.getElementById('thSv').textContent=sv.serving==='them'?'🏐 서브':'';
  var se=document.getElementById('serve');se.className='serve '+sv.serving;
- if(sv.serving==='us'){var ot=(D.ourTg||{})[usSrv];se.innerHTML='🏐 우리 서브 · <span style="font-size:28px">#'+esc(usSrv||'?')+'</span> <small>'+esc(nmOf(usSrv))+' (서브 '+(sv.iu+1)+'번)'+(ot!=null?' → 🎯 상대 '+OZ[ot]:' · 상대 코트 칸을 누르면 목적타')+'</small>'+(ot!=null?'<button id="zoomBtn" style="margin-left:auto;border:0;border-radius:12px;padding:8px 14px;font-size:18px;font-weight:900;background:#c99700;color:#fff">🔍 크게 보기</button>':'');}
+ if(sv.serving==='us'){var ot=(D.ourTg||{})[usSrv];se.innerHTML='🏐 우리 서브 · <span style="font-size:28px">#'+esc(usSrv||'?')+'</span> <small>'+esc(nmOf(usSrv))+' (서브 '+(sv.iu+1)+'번)'+(ot!=null?' → 🎯 상대 '+zno(ot)+'번':' · 상대 코트 칸을 누르면 목적타')+'</small>'+(ot!=null?'<button id="zoomBtn" style="margin-left:auto;border:0;border-radius:12px;padding:8px 14px;font-size:18px;font-weight:900;background:#c99700;color:#fff">🔍 크게 보기</button>':'');}
  else{var tg=O.tg[thSrvI];se.innerHTML='⚠️ 상대 서브 · <span style="font-size:28px">'+(thSrv?'#'+esc(thSrv):(thSrvI+1)+'번 서버')+'</span>'+(tg?' <small>→ 🎯 '+esc(tg.z!=null?ZN[tg.z]:'코트 표시')+(tg.m?' · '+esc(tg.m):'')+'</small>':' <small>목적타 미설정</small>')}
  var zb=document.getElementById('zoomBtn');if(zb)zb.onclick=function(){openZoom(usSrv)};
  // 배너
@@ -304,7 +305,7 @@ function render(){var c=calc(),si=c.cur;while(D.sets.length<=si)D.sets.push(newS
  // 코트 (가로: 왼쪽 우리, 오른쪽 상대)
  var h='<div class="vl" style="left:'+fx(22)+'%"></div><div class="vl" style="left:'+fx(44)+'%"></div><div class="net" style="left:'+fx(66)+'%"></div>';
  var ourNext=sv.serving==='us'?usSrv:L[st.order[(sv.iuRaw+1+9)%9]],T=D.ourTg||{},tz=T[ourNext];
- OZ.forEach(function(z,k){var c=k%3,r=Math.floor(k/3);h+='<div class="oz'+(tz===k?' hit':'')+'" data-oz2="'+k+'" style="left:'+fx(D.flip?66+(c+1)*11.33:66+c*11.33)+'%;top:'+(r*33.33)+'%">'+(tz===k?'<small>🎯 목적타</small><big>'+esc(ourNext)+'</big>':z)+'</div>'});
+ OZ.forEach(function(z,k){var c=k%3,r=Math.floor(k/3);h+='<div class="oz'+(tz===k?' hit':'')+'" data-oz2="'+k+'" style="left:'+fx(D.flip?66+(c+1)*11.33:66+c*11.33)+'%;top:'+(r*33.33)+'%">'+'<big>'+zno(k)+'</big>'+(tz===k?'<small>🎯 #'+esc(ourNext)+' 목적타</small>':'')+'</div>'});
  if(sv.serving==='them'){var t=O.tg[thSrvI];if(t){var tx=t.z!=null?ZP[t.z][0]:t.x,ty=t.z!=null?ZP[t.z][1]:t.y;h+='<div class="tg" style="left:'+fx((100-ty)*0.66)+'%;top:'+tx+'%"></div><div class="tgl" style="left:'+fx((100-ty)*0.66)+'%;top:'+tx+'%">🎯 #'+esc(thSrv||thSrvI+1)+(t.m?' '+esc(t.m):'')+'</div>'}}
  var subIn={};D.subs.forEach(function(x){if(x.s===si)subIn[x.inn]=1});
  L.forEach(function(n,sl){var p=st.pos[sl],oi=st.order.indexOf(sl);
@@ -342,7 +343,7 @@ document.getElementById('subLog').onclick=function(e){if(!e.target.closest('[dat
 var drag=null,court=document.getElementById('court');
 court.addEventListener('pointerdown',function(e){var si=calc().cur,r=court.getBoundingClientRect(),X=fx((e.clientX-r.left)/r.width*100),Y=(e.clientY-r.top)/r.height*100;
  var oz=e.target.closest('[data-oz2]');
- if(oz&&!tgMode){var c=calc(),S=c.sets[si],sv=serveState(si,S.arr),L=lineup(si),st=D.sets[si],who=sv.serving==='us'?L[st.order[sv.iu]]:L[st.order[(sv.iuRaw+1+9)%9]];if(!who)return;D.ourTg=D.ourTg||{};var k=+oz.dataset.oz2;if(D.ourTg[who]===k){openZoom(who);return}D.ourTg[who]=k;save();say('우리 #'+who+' 서브 목적타: 상대 '+OZ[k]+' (한 번 더 누르면 크게 보기)',true);render();return}
+ if(oz&&!tgMode){var c=calc(),S=c.sets[si],sv=serveState(si,S.arr),L=lineup(si),st=D.sets[si],who=sv.serving==='us'?L[st.order[sv.iu]]:L[st.order[(sv.iuRaw+1+9)%9]];if(!who)return;D.ourTg=D.ourTg||{};var k=+oz.dataset.oz2;if(D.ourTg[who]===k){openZoom(who);return}D.ourTg[who]=k;save();say('우리 #'+who+' 서브 목적타: 상대 '+zno(k)+'번 (한 번 더 누르면 크게 보기)',true);render();return}
  if(tgMode){if(X>66){say('상대 목적타는 우리 코트(왼쪽)에 찍어요');return}var c2=calc(),sv2=serveState(si,c2.sets[si].arr),O=opp(),kk=sv2.it;O.tg[kk]={x:Math.round(Y),y:Math.round(100-X/0.66),z:null,m:(O.tg[kk]&&O.tg[kk].m)||''};tgMode=false;save();say('상대 '+(O.ord[kk]?'#'+O.ord[kk]:(kk+1)+'번 서버')+' 목적타 저장',true);render();return}
  var ch=e.target.closest('.chip');if(!ch)return;var sl=+ch.dataset.sl;
  if(pickBench){var why=canSub(si,sl,pickBench);if(why){say(why);return}var L2=lineup(si),c3=calc();D.subs.push({s:si,slot:sl,out:L2[sl],inn:pickBench,at:c3.sets[si].us+'-'+c3.sets[si].th});say('#'+L2[sl]+' → #'+pickBench+' 교체',true);pickBench=null;save();render();return}
@@ -365,8 +366,8 @@ document.getElementById('usPlus').onclick=function(){addPt('us')};document.getEl
 document.getElementById('undo').onclick=function(){var c=calc();if(D.pts.length&&D.pts[D.pts.length-1].s===c.cur)D.pts.pop();else if(!c.sets[c.cur].arr.length&&D.sets.length>1&&!D.subs.some(function(x){return x.s===c.cur})){D.sets.pop()}save();render()};
 
 // ---- 목적타 크게 보기 ----
-var ZW=null;function openZoom(who){ZW=who;var z=document.getElementById('zoom'),k=(D.ourTg||{})[who],h='<div class="zh">🏐 우리 #'+esc(who)+(nmOf(who)?' '+esc(nmOf(who)):'')+' 서브 목적타</div><div class="zt">왼쪽 굵은 선 = 네트 · 칸을 누르면 바뀌어요</div><div class="zg">';
- OZ.forEach(function(nm,i){h+='<div data-zz="'+i+'" class="'+(k===i?'hit':'')+'">'+(k===i?'🎯 #'+esc(who)+'<br><span style="font-size:22px">'+nm+'</span>':nm)+'</div>'});
+var ZW=null;function openZoom(who){ZW=who;var z=document.getElementById('zoom'),k=(D.ourTg||{})[who],h='<div class="zh">🏐 우리 #'+esc(who)+(nmOf(who)?' '+esc(nmOf(who)):'')+' 서브 목적타</div><div class="zt">'+(D.flip?'오른쪽':'왼쪽')+' 굵은 선 = 네트 · 칸을 누르면 바뀌어요</div><div class="zg'+(D.flip?' fl':'')+'">';
+ var cells=[0,1,2,3,4,5,6,7,8].sort(function(a,b){return zno(a)-zno(b)});cells.forEach(function(i){h+='<div data-zz="'+i+'" class="'+(k===i?'hit':'')+'"><b style="font-size:'+(k===i?'110px':'64px')+';line-height:1">'+zno(i)+'</b>'+(k===i?'<span style="font-size:24px">🎯 #'+esc(who)+' 목적타</span>':'')+'</div>'});
  h+='</div><div class="zb"><button data-zx="del">목적타 지우기</button><button data-zx="close">닫기</button></div>';z.innerHTML=h;z.hidden=false}
 document.getElementById('zoom').addEventListener('click',function(e){var c=e.target.closest('[data-zz]'),x=e.target.closest('[data-zx]');
  if(c){D.ourTg=D.ourTg||{};D.ourTg[ZW]=+c.dataset.zz;save();openZoom(ZW);render();return}
