@@ -159,6 +159,7 @@ input{height:48px}
 .zoom .zb{display:flex;gap:10px}.zoom .zb button{border:0;border-radius:14px;padding:14px 26px;font-size:22px;font-weight:900;background:#fff;color:#14306b}
 .zoom .zt{color:#ffe680;font-size:20px;font-weight:700}
 .sb.pickable{cursor:pointer}.sb.pickable .sv{color:var(--blue)}.pq{border:0;border-radius:10px;padding:7px 14px;font-size:17px;font-weight:900;background:rgba(0,0,0,.12);color:inherit}
+.chip .ps{position:absolute;bottom:-13px;left:50%;transform:translateX(-50%);background:#14306b;color:#fff;font-style:normal;font-size:13px;font-weight:900;border-radius:7px;padding:1px 7px;white-space:nowrap}
 .game2{display:grid;gap:12px;grid-template-columns:minmax(0,1fr);margin-top:12px}
 @media (min-width:900px){.game2{grid-template-columns:1fr 1fr}}
 @media (max-width:700px){.sb .pt{font-size:42px;min-width:50px}.sb button{width:56px;height:52px;font-size:20px}.board{grid-template-columns:40px minmax(0,1fr) 40px}.srv span{width:40px;height:40px;font-size:16px}.fc .chip{width:44px;height:44px;margin:-22px 0 0 -22px}.fc .chip b{font-size:18px}.fc .chip i,.fc .chip .o{display:none}.fc .oz{font-size:10px}}
@@ -236,8 +237,8 @@ input{height:48px}
 </div>
 <script>
 var LS={get:function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-var ZN=['전위 레프트','전위 센터','전위 라이트','중위 레프트','중위 센터','중위 라이트','후위 레프트','후위 센터','후위 라이트'];
-var ZS=['전L','전C','전R','중L','중C','중R','후L','후C','후R'];
+var ZN=['레프트','센터','라이트','앞차','세터','빽차','레프트빽','센터빽','라이트빽'];
+var ZS=ZN;
 function lab(w){return /^\d+$/.test(w)?'#'+w:w}
 function zno(k){var c=k%3,r=Math.floor(k/3);return r*3+(D.flip?2-c:c)+1}
 function fx(X){return D.flip?100-X:X}
@@ -253,8 +254,12 @@ function newSet(prev){var pl=D.plans[0];var src=prev||{start:pl.p.slice(),order:
  return {start:src.start.slice(),order:src.order.slice(),pos:JSON.parse(JSON.stringify(src.pos)),first:prev?(prev.first==='us'?'them':'us'):'us'}}
 function orderFromPlan(pl){var a=[0,1,2,3,4,5,6,7,8];a.sort(function(x,y){return (+pl.o[x]||99)-(+pl.o[y]||99)});return a}
 // 기본 명단(등번호만 — 이름은 저장소에 안 넣음): 명단이 비어 있으면 플랜 A 번호로 채움
-if(!D.roster.length){var DEFN=['3','1','4','5','2','19','17','6','8','7','10','9'];D.roster=DEFN.map(function(n){return {n:n,nm:''}});if(!D.plans[0].p.filter(Boolean).length){D.plans[0].p=DEFN.slice(0,9);D.plans[0].o=[1,2,3,4,5,6,7,8,9];D.plans[0].pos=defPos()}D.sets=[];D.pts=[];D.subs=[]}
+if(!D.roster.length){var DEFN=['3','1','4','5','2','19','17','6','8','7','10','9'];D.roster=DEFN.map(function(n){return {n:n,nm:''}});if(!D.plans[0].p.filter(Boolean).length){setPlanA()}D.sets=[];D.pts=[];D.subs=[]}
+// 플랜 A 자리(우리 팀 부르는 이름): 레프트#3 센터#1 라이트#19 / 앞차#2 세터#4 빽차#6 / 레프트빽#5 센터빽#8 라이트빽#17, 서브 3-1-4-5-2-19-17-6-8
+function setPlanA(){var pl=D.plans[0];pl.p=['3','1','19','2','4','6','5','8','17'];var ord=['3','1','4','5','2','19','17','6','8'];pl.o=pl.p.map(function(n){return ord.indexOf(n)+1});pl.pos=defPos()}
+if((D.pv||0)<2){var A=D.plans[0].p.slice().sort().join(',');if(A===['3','1','4','5','2','19','17','6','8'].sort().join(',')){setPlanA();D.applyA=1}D.pv=2}
 if(!D.sets.length)D.sets.push(newSet(null));
+if(D.applyA){delete D.applyA;var st0=D.sets[D.sets.length-1],si0=D.sets.length-1;if(!D.pts.some(function(x){return x.s===si0})&&!D.subs.some(function(x){return x.s===si0})){var pa=D.plans[0];st0.start=pa.p.slice();st0.order=orderFromPlan(pa);st0.pos=defPos()}}save();
 
 // ---- 경기 계산 ----
 var WR=null; // 위리 이벤트로 만든 점수 목록
@@ -312,7 +317,7 @@ function render(){var c=calc(),si=c.cur;while(D.sets.length<=si)D.sets.push(newS
  if(sv.serving==='them'){var t=O.tg[thSrvI];if(t){var tx=t.z!=null?ZP[t.z][0]:t.x,ty=t.z!=null?ZP[t.z][1]:t.y;h+='<div class="tg" style="left:'+fx((100-ty)*0.66)+'%;top:'+tx+'%"></div><div class="tgl" style="left:'+fx((100-ty)*0.66)+'%;top:'+tx+'%">🎯 #'+esc(thSrv||thSrvI+1)+(t.m?' '+esc(t.m):'')+'</div>'}}
  var subIn={};D.subs.forEach(function(x){if(x.s===si)subIn[x.inn]=1});
  L.forEach(function(n,sl){var p=st.pos[sl],oi=st.order.indexOf(sl);
-  h+='<div class="chip'+(sv.serving==='us'&&sl===usSrvSlot?' srv':'')+(subIn[n]&&st.start.indexOf(n)<0?' subin':'')+'" data-sl="'+sl+'" style="left:'+fx((100-p.y)*0.66)+'%;top:'+p.x+'%"><span class="o">'+(oi+1)+'</span><b>'+esc(n||'?')+'</b><i>'+esc(nmOf(n))+'</i></div>'});
+  h+='<div class="chip'+(sv.serving==='us'&&sl===usSrvSlot?' srv':'')+(subIn[n]&&st.start.indexOf(n)<0?' subin':'')+'" data-sl="'+sl+'" style="left:'+fx((100-p.y)*0.66)+'%;top:'+p.x+'%"><span class="o">'+(oi+1)+'</span><b>'+esc(n||'?')+'</b><i>'+esc(nmOf(n))+'</i><em class="ps">'+ZN[sl]+'</em></div>'});
  document.getElementById('court').innerHTML=h;
  var sl_=document.getElementById(D.flip?'srvR':'srvL'),sr_=document.getElementById(D.flip?'srvL':'srvR');document.querySelector('.sbar').classList.toggle('flip',!!D.flip);sl_.className='srv us';sr_.className='srv them';
  sl_.innerHTML=sv.serving==='us'?'<span><small>서브</small>'+esc(usSrv||'?')+'</span>':'';sr_.innerHTML=sv.serving==='them'?'<span><small>서브</small>'+esc(thSrv||'?')+'</span>':'';
@@ -417,7 +422,7 @@ function quickImport(txt){var lines=txt.split('\n'),blocks=[],cur=[],m=document.
  blocks.forEach(function(b){if(!b.lab||b.lab==='bench'||b.lab==='?')return;if(b.ps.length!==9){done.push('⚠️ 플랜 '+b.lab+' '+b.ps.length+'명 (9명이어야 해요)');return}
   var idx=b.lab.charCodeAt(0)-65;if(!(idx>=0&&idx<26))idx=D.plans.findIndex(function(p){return p.nm==='플랜 '+b.lab});
   while(D.plans.length<=idx)D.plans.push(blankPlan('플랜 '+String.fromCharCode(65+D.plans.length)));
-  var pl=D.plans[idx];pl.p=b.ps.map(function(x){return x.n});pl.o=[1,2,3,4,5,6,7,8,9];pl.pos=defPos();done.push('✅ '+pl.nm+' 스타팅·서브 순서 '+pl.p.map(function(n,i){return (i+1)+'#'+n}).join(' '))});
+  var pl=D.plans[idx];pl.p=b.ps.map(function(x){return x.n});pl.o=[1,2,3,4,5,6,7,8,9];pl.pos=defPos();if(idx===0&&pl.p.slice().sort().join(',')===['3','1','4','5','2','19','17','6','8'].sort().join(','))setPlanA();done.push('✅ '+pl.nm+' 스타팅·서브 순서 '+pl.p.map(function(n,i){return (i+1)+'#'+n}).join(' '))});
  save();m.className='msg ok';m.innerHTML='✅ 명단 '+D.roster.length+'명<br>'+done.join('<br>')+'<br>자리는 서브 순서대로 전위→중위→후위로 넣었어요. 경기 화면에서 끌어 옮긴 뒤 «지금 코트 위치·선수로 저장»을 누르세요.';document.getElementById('quick').value='';renderSetup()}
 // 암호 링크(#imp=)로 명단 넣기 — 이름은 링크 안에 암호로만, 서버엔 안 감
 function ub(t){t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';return Uint8Array.from(atob(t),function(c){return c.charCodeAt(0)})}
