@@ -213,6 +213,7 @@ input{height:48px}
   <h2>📋 플랜 (스타팅 · 서브 순서)</h2>
   <div class="chips2" id="planTabs"></div>
   <div class="t" style="margin-top:8px">자리마다 선수와 서브 순서를 골라요. 코트에서 옮긴 위치도 «지금 코트 위치로 저장»으로 넣을 수 있어요.</div>
+  <textarea id="planMemo" rows="3" placeholder="플랜 메모 (전술 설명)" style="margin-top:8px"></textarea>
   <div class="grid9" id="planGrid" style="margin-top:8px"></div>
   <button class="btn" id="planSave">이 플랜 저장</button>
   <button class="btn g" id="planFromCourt">지금 코트 위치·선수로 저장</button>
@@ -394,7 +395,7 @@ document.addEventListener('click',function(e){if(!e.target.closest('[data-plan2]
 document.getElementById('planBtns').onclick=function(e){var b=e.target.closest('[data-plan]');if(!b)return;applyPlan(+b.dataset.plan)};
 function applyPlan(i){var c=calc(),si=c.cur,pl=D.plans[i];if(pl.p.filter(Boolean).length<9){say(pl.nm+'에 9명이 다 안 들어가 있어요 (설정에서 채우기)');return}
  if(c.sets[si].arr.length||D.subs.some(function(x){return x.s===si})){if(!confirm('이번 세트에 점수나 교체 기록이 있어요. 그래도 '+pl.nm+'(으)로 스타팅을 바꿀까요? 이번 세트 교체 기록은 지워져요.'))return;D.subs=D.subs.filter(function(x){return x.s!==si})}
- var st=D.sets[si];st.start=pl.p.slice();st.order=orderFromPlan(pl);st.pos=JSON.parse(JSON.stringify(pl.pos));save();say(pl.nm+' 적용',true);render()}
+ var st=D.sets[si];st.start=pl.p.slice();st.order=orderFromPlan(pl);st.pos=JSON.parse(JSON.stringify(pl.pos));save();say(pl.nm+' 적용'+(pl.memo?' · '+pl.memo.split('\n')[0]:''),true);render()}
 // 점수
 function addPt(w){if(WR)return;var c=calc();if(c.over)return;if(c.sets[c.cur].done){say('세트가 끝났어요. «다음 세트 시작»을 누르세요');return}D.pts.push({s:c.cur,w:w});save();render()}
 document.querySelectorAll('.sb').forEach(function(x){x.addEventListener('click',function(e){if(e.target.closest('button')||!x.classList.contains('pickable'))return;var si=calc().cur;D.sets[si].first=x.classList.contains('us')?'us':'them';save();render()})});
@@ -415,6 +416,7 @@ var planI=0,oppEdit=D.oppI;
 function renderSetup(){document.getElementById('roster').value=D.roster.map(function(r){return r.n+(r.nm?' '+r.nm:'')}).join('\n');document.getElementById('usName').value=D.us||'';
  document.getElementById('planTabs').innerHTML=D.plans.map(function(p,i){return '<button data-pi="'+i+'" class="'+(i===planI?'on':'')+'">'+esc(p.nm)+'</button>'}).join('')+'<button data-pi="new">+ 플랜</button>';
  var pl=D.plans[planI],opt=function(v){return '<option value="">-</option>'+D.roster.map(function(r){return '<option value="'+esc(r.n)+'"'+(r.n===v?' selected':'')+'>#'+esc(r.n)+(r.nm?' '+esc(r.nm):'')+'</option>'}).join('')};
+ document.getElementById('planMemo').value=pl.memo||'';
  document.getElementById('planGrid').innerHTML=ZN.map(function(z,i){var o='';for(var k=1;k<=9;k++)o+='<option value="'+k+'"'+(+pl.o[i]===k?' selected':'')+'>서브 '+k+'번</option>';return '<label><span>'+z+'</span><select data-pp="'+i+'">'+opt(pl.p[i])+'</select><select data-po="'+i+'">'+o+'</select></label>'}).join('');
  document.getElementById('oppTabs').innerHTML=D.opps.map(function(p,i){return '<button data-oi="'+i+'" class="'+(i===oppEdit?'on':'')+'">'+esc(p.nm||'상대 '+(i+1))+(i===D.oppI?' ✓':'')+'</button>'}).join('');
  var O=D.opps[oppEdit];document.getElementById('oppName').value=O.nm||'';
@@ -428,7 +430,7 @@ document.getElementById('planSave').onclick=function(){var pl=D.plans[planI],m=d
  var p=[],o=[];document.querySelectorAll('[data-pp]').forEach(function(s){p[+s.dataset.pp]=s.value});document.querySelectorAll('[data-po]').forEach(function(s){o[+s.dataset.po]=+s.value});
  var dupP=p.filter(Boolean).some(function(v,i,a){return a.indexOf(v)!==i}),dupO=o.some(function(v,i,a){return a.indexOf(v)!==i});
  if(dupP){m.textContent='⚠️ 같은 선수가 두 자리에 있어요';return}if(dupO){m.textContent='⚠️ 서브 순서 번호가 겹쳐요';return}
- pl.p=p;pl.o=o;save();m.className='msg ok';m.textContent='✅ '+pl.nm+' 저장 ('+p.filter(Boolean).length+'/9명)'};
+ pl.p=p;pl.o=o;pl.memo=document.getElementById('planMemo').value.slice(0,600);save();m.className='msg ok';m.textContent='✅ '+pl.nm+' 저장 ('+p.filter(Boolean).length+'/9명)'};
 document.getElementById('planFromCourt').onclick=function(){var si=calc().cur,st=D.sets[si],pl=D.plans[planI],L=lineup(si);pl.p=L.slice();pl.pos=JSON.parse(JSON.stringify(st.pos));var o=[];st.order.forEach(function(sl,i){o[sl]=i+1});pl.o=o;save();renderSetup();var m=document.getElementById('planMsg');m.className='msg ok';m.textContent='✅ 지금 코트를 '+pl.nm+'(으)로 저장'};
 document.getElementById('planApply').onclick=function(){document.getElementById('planSave').click();applyPlan(planI);document.querySelector('.top button[data-v=game]').click()};
 document.getElementById('oppTabs').onclick=function(e){var b=e.target.closest('[data-oi]');if(!b)return;oppEdit=+b.dataset.oi;renderSetup()};
