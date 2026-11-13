@@ -186,6 +186,13 @@ input{height:48px}
 
 <div class="zoom" id="zoom" hidden></div>
 <div id="vSetup" class="set" hidden>
+ <div class="card" style="grid-column:1/-1">
+  <h2>⚡ 붙여넣기로 한 번에</h2>
+  <div class="t">«등번호 이름» 줄들 다음 줄에 «플랜 A 서브 순서» 또는 «대기»라고 적은 글을 그대로 붙여넣어요. 위에서부터 서브 1번~9번 순서로 들어가요.</div>
+  <textarea id="quick" rows="8" placeholder="3 홍길동&#10;1 ...&#10;(9명)&#10;플랜 A 서브 순서&#10;&#10;7 ...&#10;대기"></textarea>
+  <button class="btn" id="quickGo">명단·플랜 넣기</button>
+  <div class="msg" id="quickMsg"></div>
+ </div>
  <div class="card">
   <h2>👥 우리 선수 명단</h2>
   <div class="t">한 줄에 한 명 · «등번호 이름» (이름은 빼도 돼요, 이 기기에만 저장)</div>
@@ -393,6 +400,18 @@ document.getElementById('oppSave').onclick=function(){var O=D.opps[oppEdit];O.nm
  D.oppI=oppEdit;save();renderSetup();alertOk('oppSave','✅ 저장 · 경기에서 이 상대 사용')};
 document.getElementById('oppAdd').onclick=function(){D.opps.push({nm:'상대 '+(D.opps.length+1),ord:['','','','','','','','',''],tg:{}});oppEdit=D.opps.length-1;save();renderSetup()};
 document.getElementById('newGame').onclick=function(){if(!confirm('점수와 교체 기록을 지우고 새 경기를 시작할까요?'))return;D.pts=[];D.subs=[];D.sets=[newSet(null)];save();alertOk('newGame','✅ 새 경기')};
+
+document.getElementById('quickGo').onclick=function(){var lines=document.getElementById('quick').value.split('\n'),blocks=[],cur=[],m=document.getElementById('quickMsg'),done=[];
+ function flush(){if(cur.length){blocks.push({ps:cur,lab:null});cur=[]}}
+ lines.forEach(function(l){var t=l.trim();if(!t){flush();return}var pm=t.match(/^#?(\d{1,2})\s*(.*)$/);if(pm){cur.push({n:pm[1],nm:pm[2].trim().slice(0,8)});return}
+  flush();var lab=/대기|후보|벤치/.test(t)?'bench':((t.match(/플랜\s*([A-Za-z가-힣0-9])/)||[])[1]||'').toUpperCase();var b=null;for(var i=blocks.length-1;i>=0;i--)if(!blocks[i].lab){b=blocks[i];break}if(b)b.lab=lab||'?'});
+ flush();var seen={};D.roster=D.roster.filter(function(){return false});
+ blocks.forEach(function(b){b.ps.forEach(function(x){if(!seen[x.n]){seen[x.n]=1;D.roster.push(x)}})});
+ blocks.forEach(function(b){if(!b.lab||b.lab==='bench'||b.lab==='?')return;if(b.ps.length!==9){done.push('⚠️ 플랜 '+b.lab+' '+b.ps.length+'명 (9명이어야 해요)');return}
+  var idx=b.lab.charCodeAt(0)-65;if(!(idx>=0&&idx<26))idx=D.plans.findIndex(function(p){return p.nm==='플랜 '+b.lab});
+  while(D.plans.length<=idx)D.plans.push(blankPlan('플랜 '+String.fromCharCode(65+D.plans.length)));
+  var pl=D.plans[idx];pl.p=b.ps.map(function(x){return x.n});pl.o=[1,2,3,4,5,6,7,8,9];pl.pos=defPos();done.push('✅ '+pl.nm+' 스타팅·서브 순서 '+pl.p.map(function(n,i){return (i+1)+'#'+n}).join(' '))});
+ save();m.className='msg ok';m.innerHTML='✅ 명단 '+D.roster.length+'명<br>'+done.join('<br>')+'<br>자리는 서브 순서대로 전위→중위→후위로 넣었어요. 경기 화면에서 끌어 옮긴 뒤 «지금 코트 위치·선수로 저장»을 누르세요.';document.getElementById('quick').value='';renderSetup()};
 
 // ---- 위리 연결 ----
 var RT='https://matchmaker-28187-default-rtdb.asia-southeast1.firebasedatabase.app/wereplay/',es=null;
