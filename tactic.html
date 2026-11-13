@@ -166,6 +166,7 @@ input{height:48px}
 .top button.pt{background:#ffcf33;color:#14306b}
 .fc .chip.away{background:rgba(255,255,255,.15);border:3px dashed rgba(255,255,255,.9);box-shadow:none;color:#fff}.fc .chip.away i{color:#fff;font-size:15px}
 .srv.us span{width:90px;height:90px}.srv.us span b{font-size:34px;line-height:1}.srv.us span em{font-style:normal;font-size:13px;font-weight:700}
+.fc .oz big,.zoom .zg b{display:inline-block;transform:rotate(90deg)}.fc.fl .oz big,.zoom .zg.fl b{transform:rotate(-90deg)}
 .game2{display:grid;gap:12px;grid-template-columns:minmax(0,1fr);margin-top:12px}
 @media (min-width:900px){.game2{grid-template-columns:1fr 1fr}}
 @media (max-width:700px){.sb .pt{font-size:42px;min-width:50px}.sb button{width:56px;height:52px;font-size:20px}.board{grid-template-columns:40px minmax(0,1fr) 40px}.srv span{width:40px;height:40px;font-size:16px}.fc .chip{width:44px;height:44px;margin:-22px 0 0 -22px}.fc .chip b{font-size:18px}.fc .chip i,.fc .chip .o{display:none}.fc .oz{font-size:10px}}
@@ -248,7 +249,7 @@ var ZN=['레프트','센터','라이트','앞차','세터','빽차','레프트�
 var ZS=ZN;
 function lab(w){return /^\d+$/.test(w)?'#'+w:w}
 var AS=66,AW=(100-66)/3;function setSplit(big){AS=big?50:66;AW=(100-AS)/3}
-function zno(k){var c=k%3,r=Math.floor(k/3);return r*3+(D.flip?2-c:c)+1}
+function zno(k){var c=k%3,r=Math.floor(k/3);return (2-c)*3+r+1} // 뒷라인 줄부터 1·2·3(위→아래), 가운데 4·5·6, 네트 쪽 7·8·9
 function fx(X){return D.flip?100-X:X}
 var OZ=['앞 위','중간 위','뒤 위','앞 가운데','중간 가운데','뒤 가운데','앞 아래','중간 아래','뒤 아래'];
 var ZP=[[18,17],[50,17],[82,17],[18,50],[50,50],[82,50],[18,83],[50,83],[82,83]];
@@ -338,7 +339,7 @@ function render(){var c=calc(),si=c.cur;while(D.sets.length<=si)D.sets.push(newS
  L.forEach(function(n,sl){var p=st.pos[sl],oi=st.order.indexOf(sl);
   var away=sv.serving==='us'&&sl===usSrvSlot;if(away){h+='<div class="chip away" data-sl="'+sl+'" style="left:'+fx((100-p.y)*AS/100)+'%;top:'+p.x+'%"><i>서브 중</i><i>#'+esc(n||'?')+'</i></div>';return}
   h+='<div class="chip'+(sv.serving==='us'&&sl===usSrvSlot?' srv':'')+(subIn[n]&&st.start.indexOf(n)<0?' subin':'')+'" data-sl="'+sl+'" style="left:'+fx((100-p.y)*AS/100)+'%;top:'+p.x+'%"><span class="o">'+(oi+1)+'</span><b>'+esc(n||'?')+'</b><i>'+esc(nmOf(n))+'</i></div>'});
- document.getElementById('court').innerHTML=h;
+ document.getElementById('court').innerHTML=h;document.getElementById('court').classList.toggle('fl',!!D.flip);
  var sl_=document.getElementById(D.flip?'srvR':'srvL'),sr_=document.getElementById(D.flip?'srvL':'srvR');document.querySelector('.sbar').classList.toggle('flip',!!D.flip);sl_.className='srv us';sr_.className='srv them';
  sl_.innerHTML=sv.serving==='us'?'<span><small>서브</small><b>'+esc(usSrv||'?')+'</b><em>'+esc(nmOf(usSrv))+'</em></span>':'';sr_.innerHTML=sv.serving==='them'?'<span><small>서브</small>'+esc(thSrv||'?')+'</span>':'';
  document.getElementById('tgBtn').classList.toggle('on',tgMode);document.getElementById('tgBtn').textContent=tgMode?'코트를 눌러 목적타 위치 찍기 (#'+(thSrv||thSrvI+1)+')':'🎯 상대 목적타 찍기';
@@ -401,8 +402,8 @@ document.getElementById('usPlus').onclick=function(){addPt('us')};document.getEl
 document.getElementById('undo').onclick=function(){var c=calc();if(D.pts.length&&D.pts[D.pts.length-1].s===c.cur)D.pts.pop();else if(!c.sets[c.cur].arr.length&&D.sets.length>1&&!D.subs.some(function(x){return x.s===c.cur})){D.sets.pop()}save();render()};
 
 // ---- 목적타 크게 보기 ----
-var ZW=null;function openZoom(who){ZW=who;var z=document.getElementById('zoom'),k=(D.ourTg||{})[who],h='<div class="zh">🏐 우리 '+esc(lab(who))+(nmOf(who)?' '+esc(nmOf(who)):'')+' 서브 목적타</div><div class="zt">'+(D.flip?'오른쪽':'왼쪽')+' 굵은 선 = 네트 · 칸을 누르면 바뀌어요</div><div class="zg'+(D.flip?' fl':'')+'">';
- var cells=[0,1,2,3,4,5,6,7,8].sort(function(a,b){return zno(a)-zno(b)});cells.forEach(function(i){h+='<div data-zz="'+i+'" class="'+(k===i?'hit':'')+'"><b style="font-size:'+(k===i?'110px':'64px')+';line-height:1">'+zno(i)+'</b>'+(k===i?'<span style="font-size:24px">🎯 '+esc(lab(who))+' 목적타</span>':'')+'</div>'});
+var ZW=null;function openZoom(who){ZW=who;var z=document.getElementById('zoom'),k=(D.ourTg||{})[who],h='<div class="zg'+(D.flip?' fl':'')+'">';
+ var cells=[];for(var rr=0;rr<3;rr++)for(var cc=0;cc<3;cc++)cells.push(rr*3+(D.flip?2-cc:cc));cells.forEach(function(i){h+='<div data-zz="'+i+'" class="'+(k===i?'hit':'')+'"><b style="font-size:'+(k===i?'110px':'64px')+';line-height:1">'+zno(i)+'</b>'+(k===i?'<span style="font-size:24px">🎯 '+esc(lab(who))+' 목적타</span>':'')+'</div>'});
  h+='</div><div class="zb"><button data-zx="del">목적타 지우기</button><button data-zx="close">닫기</button></div>';z.innerHTML=h;z.hidden=false}
 document.getElementById('zoom').addEventListener('click',function(e){var c=e.target.closest('[data-zz]'),x=e.target.closest('[data-zx]');
  if(c){D.ourTg=D.ourTg||{};D.ourTg[ZW]=+c.dataset.zz;save();openZoom(ZW);render();return}
