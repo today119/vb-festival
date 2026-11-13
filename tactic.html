@@ -404,7 +404,8 @@ document.getElementById('oppSave').onclick=function(){var O=D.opps[oppEdit];O.nm
 document.getElementById('oppAdd').onclick=function(){D.opps.push({nm:'상대 '+(D.opps.length+1),ord:['','','','','','','','',''],tg:{}});oppEdit=D.opps.length-1;save();renderSetup()};
 document.getElementById('newGame').onclick=function(){if(!confirm('점수와 교체 기록을 지우고 새 경기를 시작할까요?'))return;D.pts=[];D.subs=[];D.sets=[newSet(null)];save();alertOk('newGame','✅ 새 경기')};
 
-document.getElementById('quickGo').onclick=function(){var lines=document.getElementById('quick').value.split('\n'),blocks=[],cur=[],m=document.getElementById('quickMsg'),done=[];
+document.getElementById('quickGo').onclick=function(){quickImport(document.getElementById('quick').value)};
+function quickImport(txt){var lines=txt.split('\n'),blocks=[],cur=[],m=document.getElementById('quickMsg'),done=[];
  function flush(){if(cur.length){blocks.push({ps:cur,lab:null});cur=[]}}
  lines.forEach(function(l){var t=l.trim();if(!t){flush();return}var pm=t.match(/^#?(\d{1,2})\s*(.*)$/);if(pm){cur.push({n:pm[1],nm:pm[2].trim().slice(0,8)});return}
   flush();var lab=/대기|후보|벤치/.test(t)?'bench':((t.match(/플랜\s*([A-Za-z가-힣0-9])/)||[])[1]||'').toUpperCase();var b=null;for(var i=blocks.length-1;i>=0;i--)if(!blocks[i].lab){b=blocks[i];break}if(b)b.lab=lab||'?'});
@@ -414,7 +415,14 @@ document.getElementById('quickGo').onclick=function(){var lines=document.getElem
   var idx=b.lab.charCodeAt(0)-65;if(!(idx>=0&&idx<26))idx=D.plans.findIndex(function(p){return p.nm==='플랜 '+b.lab});
   while(D.plans.length<=idx)D.plans.push(blankPlan('플랜 '+String.fromCharCode(65+D.plans.length)));
   var pl=D.plans[idx];pl.p=b.ps.map(function(x){return x.n});pl.o=[1,2,3,4,5,6,7,8,9];pl.pos=defPos();done.push('✅ '+pl.nm+' 스타팅·서브 순서 '+pl.p.map(function(n,i){return (i+1)+'#'+n}).join(' '))});
- save();m.className='msg ok';m.innerHTML='✅ 명단 '+D.roster.length+'명<br>'+done.join('<br>')+'<br>자리는 서브 순서대로 전위→중위→후위로 넣었어요. 경기 화면에서 끌어 옮긴 뒤 «지금 코트 위치·선수로 저장»을 누르세요.';document.getElementById('quick').value='';renderSetup()};
+ save();m.className='msg ok';m.innerHTML='✅ 명단 '+D.roster.length+'명<br>'+done.join('<br>')+'<br>자리는 서브 순서대로 전위→중위→후위로 넣었어요. 경기 화면에서 끌어 옮긴 뒤 «지금 코트 위치·선수로 저장»을 누르세요.';document.getElementById('quick').value='';renderSetup()}
+// 암호 링크(#imp=)로 명단 넣기 — 이름은 링크 안에 암호로만, 서버엔 안 감
+function ub(t){t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';return Uint8Array.from(atob(t),function(c){return c.charCodeAt(0)})}
+function impTry(pin){var b=ub(location.hash.slice(5)),salt=b.slice(0,16),iv=b.slice(16,28),ct=b.slice(28);
+ return crypto.subtle.importKey('raw',new TextEncoder().encode(pin),'PBKDF2',false,['deriveKey']).then(function(k){return crypto.subtle.deriveKey({name:'PBKDF2',salt:salt,iterations:200000,hash:'SHA-256'},k,{name:'AES-GCM',length:256},false,['decrypt'])}).then(function(k){return crypto.subtle.decrypt({name:'AES-GCM',iv:iv},k,ct)}).then(function(p){return new TextDecoder().decode(p)})}
+if(/^#imp=/.test(location.hash)){var z=document.getElementById('zoom');z.innerHTML='<div class="zh">📥 명단·플랜 넣기</div><div class="zt">비밀번호를 넣으면 이 아이패드에 들어가요</div><input id="impPin" type="password" inputmode="numeric" style="width:220px;height:60px;font-size:28px;text-align:center"><div class="zb"><button id="impOk">넣기</button><button data-zx="close">취소</button></div><div class="zt" id="impMsg"></div>';z.hidden=false;
+ document.getElementById('impOk').onclick=function(){impTry(document.getElementById('impPin').value).then(function(t){history.replaceState(null,'',location.pathname+location.search);quickImport(t);z.hidden=true;var cc=calc();if(!cc.sets[cc.cur].arr.length&&!D.subs.some(function(x){return x.s===cc.cur}))applyPlan(0);document.querySelector('.top button[data-v=setup]').click();scrollTo(0,0)}).catch(function(){document.getElementById('impMsg').textContent='비밀번호가 달라요'})}}
+
 
 // ---- 위리 연결 ----
 var RT='https://matchmaker-28187-default-rtdb.asia-southeast1.firebasedatabase.app/wereplay/',es=null;
