@@ -14,13 +14,13 @@ html,body{overflow-x:hidden}
 body{font-family:'Noto Sans KR',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:18px;line-height:1.45}
 [hidden]{display:none!important}
 button{font:inherit;cursor:pointer}
-.top{display:flex;gap:8px;align-items:center;padding:10px 16px;background:var(--navy);color:#fff}
+.top{display:flex;gap:8px;align-items:center;padding:5px 16px;background:var(--navy);color:#fff}
 :root[data-theme="dark"] .top{background:#14306b}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .top{background:#14306b}}
 .top h1{font-size:20px;font-weight:900;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .top button{border:0;border-radius:12px;padding:9px 14px;font-weight:900;font-size:17px;background:rgba(255,255,255,.16);color:#fff}
 .top button.on{background:#fff;color:#14306b}
-.page{padding:12px 16px 40px;max-width:1280px;margin:0 auto}
+.page{padding:8px 16px 40px;max-width:1280px;margin:0 auto}
 .game{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
 @media (min-width:900px){.courtwrap{max-width:calc(100vh - 210px);margin:0 auto}.opp{height:80px}.game{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:start}}
 .card{background:var(--card);border-radius:18px;padding:14px;box-shadow:0 2px 8px rgba(20,48,107,.07)}
@@ -131,13 +131,13 @@ input{height:48px}
 .sb button{border:0;border-radius:14px;width:76px;height:64px;font-size:24px;font-weight:900;background:var(--blue);color:#fff;flex:0 0 auto}
 .sb.them button{background:var(--red)}
 .mid .prev{font-size:13px;margin:0}
-.board{display:grid;grid-template-columns:64px minmax(0,1fr) 64px;gap:6px;align-items:center;margin-top:10px}
-.fc{position:relative;height:min(calc(100vh - 385px),calc((100vw - 190px) / 2));height:min(calc(100dvh - 385px),calc((100vw - 190px) / 2));min-height:150px;width:auto;aspect-ratio:2/1;margin:0 auto;background:var(--court);border:4px solid #fff;border-radius:10px;touch-action:none;user-select:none;-webkit-user-select:none}
+.board{display:grid;grid-template-columns:64px minmax(0,1fr) 64px;gap:6px;align-items:center;margin-top:8px}
+.fc{position:relative;height:calc(100vh - 300px);height:calc(100dvh - 300px);min-height:300px;width:100%;margin:0 auto;background:var(--court);border:4px solid #fff;border-radius:10px;touch-action:none;user-select:none;-webkit-user-select:none}
 .fc .half{position:absolute;top:0;bottom:0;width:50%}
-.fc .net{position:absolute;left:50%;top:-14px;bottom:-14px;width:10px;margin-left:-5px;background:repeating-linear-gradient(0deg,#fff 0 6px,#333 6px 12px);border:2px solid #fff;border-radius:4px;z-index:3;height:auto}
+.fc .net{position:absolute;left:66%;top:-14px;bottom:-14px;width:10px;margin-left:-5px;background:repeating-linear-gradient(0deg,#fff 0 6px,#333 6px 12px);border:2px solid #fff;border-radius:4px;z-index:3;height:auto}
 .fc .vl{position:absolute;top:0;bottom:0;border-left:2px dashed rgba(255,255,255,.55)}
-.fc .hl{position:absolute;left:0;width:50%;border-top:2px dashed rgba(255,255,255,.55)}
-.fc .oz{position:absolute;width:16.66%;height:33.33%;border:1px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:rgba(255,255,255,.85);text-align:center;cursor:pointer;background:var(--court2)}
+.fc .hl{position:absolute;left:0;width:66%;border-top:2px dashed rgba(255,255,255,.55)}
+.fc .oz{position:absolute;width:11.33%;height:33.33%;border:1px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:rgba(255,255,255,.85);text-align:center;cursor:pointer;background:var(--court2)}
 .fc .oz.hit{background:rgba(250,204,21,.85);color:#3d2e00;font-size:17px;font-weight:900}
 .fc .zl{font-size:12px}
 .srv{display:flex;align-items:center;justify-content:center;min-height:64px}
@@ -145,8 +145,8 @@ input{height:48px}
 .srv span small{font-size:12px}
 .srv.us span{background:var(--yel);color:#3d2e00;box-shadow:0 0 0 5px rgba(250,204,21,.4)}
 .srv.them span{background:var(--red);color:#fff}
-.fc .chip{width:66px;height:66px;margin:-33px 0 0 -33px}
-.fc .chip b{font-size:27px}
+.fc .chip{width:84px;height:84px;margin:-42px 0 0 -42px}
+.fc .chip b{font-size:34px}.fc .chip i{font-size:14px}
 .benchbar{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
 .benchbar>b{font-size:18px;font-weight:900;color:var(--navy)}
 .benchbar .bench{margin:0;flex:1}
@@ -294,13 +294,13 @@ function render(){var c=calc(),si=c.cur;while(D.sets.length<=si)D.sets.push(newS
  document.getElementById('ordUs').innerHTML=st.order.map(function(sl,i){var n=L[sl];return '<span class="'+(sv.serving==='us'&&i===sv.iu?'now':'')+'"><small>'+(i+1)+'</small>'+esc(n||'?')+'</span>'}).join('');
  document.getElementById('ordTh').innerHTML=O.ord.map(function(n,i){return '<span class="'+(sv.serving==='them'&&i===sv.it?'now':'')+'"><small>'+(i+1)+'</small>'+(n?esc(n):'-')+'</span>'}).join('');
  // 코트 (가로: 왼쪽 우리, 오른쪽 상대)
- var h='<div class="vl" style="left:16.66%"></div><div class="vl" style="left:33.33%"></div><div class="net"></div>';
+ var h='<div class="vl" style="left:'+fx(22)+'%"></div><div class="vl" style="left:'+fx(44)+'%"></div><div class="net" style="left:'+fx(66)+'%"></div>';
  var ourNext=sv.serving==='us'?usSrv:L[st.order[(sv.iuRaw+1+9)%9]],T=D.ourTg||{},tz=T[ourNext];
- OZ.forEach(function(z,k){var c=k%3,r=Math.floor(k/3);h+='<div class="oz'+(tz===k?' hit':'')+'" data-oz2="'+k+'" style="left:'+fx(D.flip?50+(c+1)*16.66:50+c*16.66)+'%;top:'+(r*33.33)+'%">'+(tz===k?'🎯 #'+esc(ourNext):z)+'</div>'});
- if(sv.serving==='them'){var t=O.tg[thSrvI];if(t){var tx=t.z!=null?ZP[t.z][0]:t.x,ty=t.z!=null?ZP[t.z][1]:t.y;h+='<div class="tg" style="left:'+fx((100-ty)/2)+'%;top:'+tx+'%"></div><div class="tgl" style="left:'+fx((100-ty)/2)+'%;top:'+tx+'%">🎯 #'+esc(thSrv||thSrvI+1)+(t.m?' '+esc(t.m):'')+'</div>'}}
+ OZ.forEach(function(z,k){var c=k%3,r=Math.floor(k/3);h+='<div class="oz'+(tz===k?' hit':'')+'" data-oz2="'+k+'" style="left:'+fx(D.flip?66+(c+1)*11.33:66+c*11.33)+'%;top:'+(r*33.33)+'%">'+(tz===k?'🎯 #'+esc(ourNext):z)+'</div>'});
+ if(sv.serving==='them'){var t=O.tg[thSrvI];if(t){var tx=t.z!=null?ZP[t.z][0]:t.x,ty=t.z!=null?ZP[t.z][1]:t.y;h+='<div class="tg" style="left:'+fx((100-ty)*0.66)+'%;top:'+tx+'%"></div><div class="tgl" style="left:'+fx((100-ty)*0.66)+'%;top:'+tx+'%">🎯 #'+esc(thSrv||thSrvI+1)+(t.m?' '+esc(t.m):'')+'</div>'}}
  var subIn={};D.subs.forEach(function(x){if(x.s===si)subIn[x.inn]=1});
  L.forEach(function(n,sl){var p=st.pos[sl],oi=st.order.indexOf(sl);
-  h+='<div class="chip'+(sv.serving==='us'&&sl===usSrvSlot?' srv':'')+(subIn[n]&&st.start.indexOf(n)<0?' subin':'')+'" data-sl="'+sl+'" style="left:'+fx((100-p.y)/2)+'%;top:'+p.x+'%"><span class="o">'+(oi+1)+'</span><b>'+esc(n||'?')+'</b><i>'+esc(nmOf(n))+'</i></div>'});
+  h+='<div class="chip'+(sv.serving==='us'&&sl===usSrvSlot?' srv':'')+(subIn[n]&&st.start.indexOf(n)<0?' subin':'')+'" data-sl="'+sl+'" style="left:'+fx((100-p.y)*0.66)+'%;top:'+p.x+'%"><span class="o">'+(oi+1)+'</span><b>'+esc(n||'?')+'</b><i>'+esc(nmOf(n))+'</i></div>'});
  document.getElementById('court').innerHTML=h;
  var sl_=document.getElementById(D.flip?'srvR':'srvL'),sr_=document.getElementById(D.flip?'srvL':'srvR');document.querySelector('.sbar').classList.toggle('flip',!!D.flip);sl_.className='srv us';sr_.className='srv them';
  sl_.innerHTML=sv.serving==='us'?'<span><small>서브</small>'+esc(usSrv||'?')+'</span>':'';sr_.innerHTML=sv.serving==='them'?'<span><small>서브</small>'+esc(thSrv||'?')+'</span>':'';
@@ -335,11 +335,11 @@ var drag=null,court=document.getElementById('court');
 court.addEventListener('pointerdown',function(e){var si=calc().cur,r=court.getBoundingClientRect(),X=fx((e.clientX-r.left)/r.width*100),Y=(e.clientY-r.top)/r.height*100;
  var oz=e.target.closest('[data-oz2]');
  if(oz&&!tgMode){var c=calc(),S=c.sets[si],sv=serveState(si,S.arr),L=lineup(si),st=D.sets[si],who=sv.serving==='us'?L[st.order[sv.iu]]:L[st.order[(sv.iuRaw+1+9)%9]];if(!who)return;D.ourTg=D.ourTg||{};var k=+oz.dataset.oz2;if(D.ourTg[who]===k){openZoom(who);return}D.ourTg[who]=k;save();say('우리 #'+who+' 서브 목적타: 상대 '+OZ[k]+' (한 번 더 누르면 크게 보기)',true);render();return}
- if(tgMode){if(X>50){say('상대 목적타는 우리 코트(왼쪽)에 찍어요');return}var c2=calc(),sv2=serveState(si,c2.sets[si].arr),O=opp(),kk=sv2.it;O.tg[kk]={x:Math.round(Y),y:Math.round(100-X*2),z:null,m:(O.tg[kk]&&O.tg[kk].m)||''};tgMode=false;save();say('상대 '+(O.ord[kk]?'#'+O.ord[kk]:(kk+1)+'번 서버')+' 목적타 저장',true);render();return}
+ if(tgMode){if(X>66){say('상대 목적타는 우리 코트(왼쪽)에 찍어요');return}var c2=calc(),sv2=serveState(si,c2.sets[si].arr),O=opp(),kk=sv2.it;O.tg[kk]={x:Math.round(Y),y:Math.round(100-X/0.66),z:null,m:(O.tg[kk]&&O.tg[kk].m)||''};tgMode=false;save();say('상대 '+(O.ord[kk]?'#'+O.ord[kk]:(kk+1)+'번 서버')+' 목적타 저장',true);render();return}
  var ch=e.target.closest('.chip');if(!ch)return;var sl=+ch.dataset.sl;
  if(pickBench){var why=canSub(si,sl,pickBench);if(why){say(why);return}var L2=lineup(si),c3=calc();D.subs.push({s:si,slot:sl,out:L2[sl],inn:pickBench,at:c3.sets[si].us+'-'+c3.sets[si].th});say('#'+L2[sl]+' → #'+pickBench+' 교체',true);pickBench=null;save();render();return}
  drag={sl:sl,el:ch,r:r,moved:false};ch.setPointerCapture(e.pointerId);ch.style.zIndex=5;e.preventDefault()});
-court.addEventListener('pointermove',function(e){if(!drag)return;var X=Math.min(48,Math.max(2,fx((e.clientX-drag.r.left)/drag.r.width*100))),Y=Math.min(95,Math.max(5,(e.clientY-drag.r.top)/drag.r.height*100));drag.el.style.left=fx(X)+'%';drag.el.style.top=Y+'%';drag.x=Y;drag.y=100-X*2;drag.moved=true});
+court.addEventListener('pointermove',function(e){if(!drag)return;var X=Math.min(63,Math.max(2,fx((e.clientX-drag.r.left)/drag.r.width*100))),Y=Math.min(95,Math.max(5,(e.clientY-drag.r.top)/drag.r.height*100));drag.el.style.left=fx(X)+'%';drag.el.style.top=Y+'%';drag.x=Y;drag.y=100-X/0.66;drag.moved=true});
 function endDrag(){if(!drag)return;if(drag.moved){var st=D.sets[calc().cur];st.pos[drag.sl]={x:Math.round(drag.x),y:Math.round(drag.y)};save()}drag=null;render()}
 court.addEventListener('pointerup',endDrag);court.addEventListener('pointercancel',endDrag);
 document.getElementById('tgBtn').onclick=function(){var c=calc(),sv=serveState(c.cur,c.sets[c.cur].arr);tgMode=!tgMode;if(tgMode&&sv.serving!=='them')say('지금은 우리 서브예요. 다음 상대 서버('+(serveState(c.cur,c.sets[c.cur].arr).it+1)+'번) 목적타로 저장돼요',true);render()};
