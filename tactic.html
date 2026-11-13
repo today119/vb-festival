@@ -132,7 +132,7 @@ input{height:48px}
 .sb.them button{background:var(--red)}
 .mid .prev{font-size:13px;margin:0}
 .board{display:grid;grid-template-columns:64px minmax(0,1fr) 64px;gap:6px;align-items:center;margin-top:8px}
-.fc{position:relative;height:calc(100vh - 300px);height:calc(100dvh - 300px);min-height:300px;width:100%;margin:0 auto;background:var(--court);border:4px solid #fff;border-radius:10px;touch-action:none;user-select:none;-webkit-user-select:none}
+.fc{position:relative;height:calc(100vh - 230px);height:calc(100dvh - 230px);min-height:300px;width:100%;margin:0 auto;background:var(--court);border:4px solid #fff;border-radius:10px;touch-action:none;user-select:none;-webkit-user-select:none}
 .fc .half{position:absolute;top:0;bottom:0;width:50%}
 .fc .net{position:absolute;left:66%;top:-14px;bottom:-14px;width:10px;margin-left:-5px;background:repeating-linear-gradient(0deg,#fff 0 6px,#333 6px 12px);border:2px solid #fff;border-radius:4px;z-index:3;height:auto}
 .fc .vl{position:absolute;top:0;bottom:0;border-left:2px dashed rgba(255,255,255,.55)}
@@ -145,8 +145,8 @@ input{height:48px}
 .srv span small{font-size:12px}
 .srv.us span{background:var(--yel);color:#3d2e00;box-shadow:0 0 0 5px rgba(250,204,21,.4)}
 .srv.them span{background:var(--red);color:#fff}
-.fc .chip{width:84px;height:84px;margin:-42px 0 0 -42px}
-.fc .chip b{font-size:34px}.fc .chip i{font-size:14px}
+.fc .chip{width:96px;height:96px;margin:-48px 0 0 -48px}
+.fc .chip b{font-size:40px}.fc .chip i{font-size:16px;max-width:84px}
 .benchbar{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
 .benchbar>b{font-size:18px;font-weight:900;color:var(--navy)}
 .benchbar .bench{margin:0;flex:1}
@@ -160,19 +160,20 @@ input{height:48px}
 .zoom .zt{color:#ffe680;font-size:20px;font-weight:700}
 .sb.pickable{cursor:pointer}.sb.pickable .sv{color:var(--blue)}.pq{border:0;border-radius:10px;padding:7px 14px;font-size:17px;font-weight:900;background:rgba(0,0,0,.12);color:inherit}
 .chip .ps{position:absolute;bottom:-13px;left:50%;transform:translateX(-50%);background:#14306b;color:#fff;font-style:normal;font-size:13px;font-weight:900;border-radius:7px;padding:1px 7px;white-space:nowrap}
-.sb .sv{font-size:18px;font-weight:700;line-height:1.35}.sb .sv .big{font-size:30px;font-weight:900}.sb .sv .t2{font-size:15px;opacity:.75}.tgchip{border:0;border-radius:10px;padding:3px 10px;font-size:20px;font-weight:900;background:#e11d2e;color:#fff;display:inline-block}.sb button.tgchip{width:auto;height:auto;flex:none;background:#e11d2e;font-size:20px;padding:3px 10px;border-radius:10px;white-space:nowrap;vertical-align:middle}
+.sb .sv{font-size:18px;font-weight:700;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sb .sv .big{font-size:30px;font-weight:900}.sb .sv .t2{font-size:15px;opacity:.75}.tgchip{border:0;border-radius:10px;padding:3px 10px;font-size:20px;font-weight:900;background:#e11d2e;color:#fff;display:inline-block}.sb button.tgchip{width:auto;height:auto;flex:none;background:#e11d2e;font-size:20px;padding:3px 10px;border-radius:10px;white-space:nowrap;vertical-align:middle}
 .planmid{display:flex;flex-direction:column;gap:4px}.planmid button{border:0;border-radius:10px;padding:5px 8px;font-size:14px;font-weight:900;background:var(--sky);color:var(--navy)}
+.top button.pt{background:#ffcf33;color:#14306b}
 .game2{display:grid;gap:12px;grid-template-columns:minmax(0,1fr);margin-top:12px}
 @media (min-width:900px){.game2{grid-template-columns:1fr 1fr}}
 @media (max-width:700px){.sb .pt{font-size:42px;min-width:50px}.sb button{width:56px;height:52px;font-size:20px}.board{grid-template-columns:40px minmax(0,1fr) 40px}.srv span{width:40px;height:40px;font-size:16px}.fc .chip{width:44px;height:44px;margin:-22px 0 0 -22px}.fc .chip b{font-size:18px}.fc .chip i,.fc .chip .o{display:none}.fc .oz{font-size:10px}}
 </style></head><body>
-<div class="top"><h1 id="ttl">🏐 배구 작전판</h1><button data-v="game" class="on">경기</button><button data-v="setup">설정</button></div>
+<div class="top"><h1 id="ttl">🏐 배구 작전판</h1><button data-v="game" class="on">경기</button><button data-v="setup">설정</button><span id="planTop" style="display:contents"></span></div>
 <div class="page">
 
 <div id="vGame">
  <div class="sbar">
   <div class="sb us"><button id="usPlus">+1</button><div class="nmw"><div class="nm" id="usNm">우리</div><div class="sv" id="usSv"></div></div><div class="pt" id="usPt">0</div></div>
-  <div class="mid"><div class="sl" id="setLbl">1세트</div><div class="sets" id="sets">0 : 0</div><div class="prev" id="prev"></div><button id="undo">↶ 취소</button><div id="planMid" class="planmid"></div></div>
+  <div class="mid"><div class="sl" id="setLbl">1세트</div><div class="sets" id="sets">0 : 0</div><div class="prev" id="prev"></div><button id="undo">↶ 취소</button></div>
   <div class="sb them"><div class="pt" id="thPt">0</div><div class="nmw"><div class="nm" id="thNm">상대</div><div class="sv" id="thSv"></div></div><button id="thPlus">+1</button></div>
  </div>
  <div class="t" id="wrInfo" style="text-align:center"></div>
@@ -284,7 +285,7 @@ function serveState(si,arr){var st=D.sets[si],serving=st.first,iu=st.first==='us
 
 // ---- 화면 ----
 var view='game',pickBench=null,tgMode=false;
-document.querySelectorAll('.top button').forEach(function(b){b.onclick=function(){view=b.dataset.v;document.querySelectorAll('.top button').forEach(function(x){x.classList.toggle('on',x===b)});document.getElementById('vGame').hidden=view!=='game';document.getElementById('vSetup').hidden=view!=='setup';if(view==='setup')renderSetup();else render();scrollTo(0,0)}});
+document.querySelectorAll('.top button[data-v]').forEach(function(b){b.onclick=function(){view=b.dataset.v;document.querySelectorAll('.top button[data-v]').forEach(function(x){x.classList.toggle('on',x===b)});document.getElementById('vGame').hidden=view!=='game';document.getElementById('vSetup').hidden=view!=='setup';if(view==='setup')renderSetup();else render();scrollTo(0,0)}});
 function opp(){return D.opps[D.oppI]||D.opps[0]}
 function render(){var c=calc(),si=c.cur;while(D.sets.length<=si)D.sets.push(newSet(D.sets[D.sets.length-1]));
  var S=c.sets[si],st=D.sets[si],sv=serveState(si,S.arr),L=lineup(si),O=opp();
@@ -327,11 +328,11 @@ function render(){var c=calc(),si=c.cur;while(D.sets.length<=si)D.sets.push(newS
  document.getElementById('planBtns').innerHTML=D.plans.map(function(p,i){return '<button class="pl" data-plan="'+i+'">'+esc(p.nm)+' 적용</button>'}).join('');
  // 서브 정보는 점수판 안(서브하는 팀 칸)에
  se.hidden=true;var usBox=document.getElementById('usSv'),thBox=document.getElementById('thSv'),ot2=(D.ourTg||{})[usSrv||('서브'+(sv.iu+1)+'번')],tgT=O.tg[thSrvI];
- var usTxt='🏐 '+(fresh?'첫 서브 · ':'')+'<b class="big">#'+esc(usSrv||'?')+'</b> '+esc(nmOf(usSrv))+' <span class="t2">서브 '+(sv.iu+1)+'번</span>'+(ot2!=null?' <button class="tgchip" id="zoomBtn2">🎯 '+zno(ot2)+'번</button>':' <span class="t2">· 상대 칸 눌러 목적타</span>');
+ var usTxt='🏐 '+(fresh?'첫 서브 · ':'')+'<b class="big">#'+esc(usSrv||'?')+'</b> '+esc(nmOf(usSrv))+' <span class="t2">서브 '+(sv.iu+1)+'번</span>'+(ot2!=null?' <button class="tgchip" id="zoomBtn2">🎯 '+zno(ot2)+'번</button>':'');
  var thTxt='🏐 '+(fresh?'첫 서브 · ':'')+'<b class="big">'+(thSrv?'#'+esc(thSrv):(thSrvI+1)+'번 서버')+'</b>'+(tgT?' <span class="tgchip r">🎯 '+esc(tgT.z!=null?ZN[tgT.z]:'코트 표시')+(tgT.m?' · '+esc(tgT.m):'')+'</span>':'');
  if(sv.serving==='us'){usBox.innerHTML=usTxt;thBox.innerHTML=fresh?'눌러서 첫 서브':''}else{thBox.innerHTML=thTxt;usBox.innerHTML=fresh?'눌러서 첫 서브':''}
  var z2=document.getElementById('zoomBtn2');if(z2)z2.onclick=function(e){e.stopPropagation();openZoom(usSrv||('서브'+(sv.iu+1)+'번'))};
- var pb2=document.getElementById('planMid');pb2.innerHTML=fresh?D.plans.map(function(p,i){return '<button data-plan2="'+i+'">'+esc(p.nm)+'</button>'}).join('')+(si>0?'<button data-plan2="prev">'+si+'세트대로</button>':''):'';
+ var pb2=document.getElementById('planTop');pb2.innerHTML=true?D.plans.map(function(p,i){return '<button data-plan2="'+i+'" class="pt">'+esc(p.nm)+'</button>'}).join(''):'';
  renderBench(si,L)}
 function subInfo(si){var st=D.sets[si],list=D.subs.filter(function(x){return x.s===si});return {st:st,list:list}}
 function canSub(si,slot,inn){var I=subInfo(si),L=lineup(si),out=L[slot],starters=I.st.start;
