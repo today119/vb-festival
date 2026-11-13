@@ -158,6 +158,7 @@ input{height:48px}
 .zoom .zg div.hit{background:var(--yel);color:#3d2e00;font-size:56px;font-weight:900}
 .zoom .zb{display:flex;gap:10px}.zoom .zb button{border:0;border-radius:14px;padding:14px 26px;font-size:22px;font-weight:900;background:#fff;color:#14306b}
 .zoom .zt{color:#ffe680;font-size:20px;font-weight:700}
+.sb.pickable{cursor:pointer}.sb.pickable .sv{color:var(--blue)}.pq{border:0;border-radius:10px;padding:7px 14px;font-size:17px;font-weight:900;background:rgba(0,0,0,.12);color:inherit}
 .game2{display:grid;gap:12px;grid-template-columns:minmax(0,1fr);margin-top:12px}
 @media (min-width:900px){.game2{grid-template-columns:1fr 1fr}}
 @media (max-width:700px){.sb .pt{font-size:42px;min-width:50px}.sb button{width:56px;height:52px;font-size:20px}.board{grid-template-columns:40px minmax(0,1fr) 40px}.srv span{width:40px;height:40px;font-size:16px}.fc .chip{width:44px;height:44px;margin:-22px 0 0 -22px}.fc .chip b{font-size:18px}.fc .chip i,.fc .chip .o{display:none}.fc .oz{font-size:10px}}
@@ -294,9 +295,9 @@ function render(){var c=calc(),si=c.cur;while(D.sets.length<=si)D.sets.push(newS
  else if(S.done&&manual)bn+='<div class="banner">'+(si+1)+'세트 끝 ('+S.us+'-'+S.th+')<button id="nextSet">'+(si+2)+'세트 시작</button></div>';
  document.getElementById('banner').innerHTML=bn;var ns=document.getElementById('nextSet');if(ns)ns.onclick=function(){D.sets.push(newSet(D.sets[si]));save();render();scrollTo(0,0)};
  // 세트 시작 전 체크 (0:0일 때)
- if(!S.arr.length&&!c.over){var pb='<div class="pre"><b>'+(si+1)+'세트 시작 전</b><span class="t">첫 서브</span><span class="chips2"><button data-first="us" class="'+(st.first==='us'?'on':'')+'">🏐 우리</button><button data-first="them" class="'+(st.first==='them'?'on r':'')+'">상대</button></span>';
-  pb+='<span class="t">스타팅</span><span class="chips2">'+D.plans.map(function(p,i){return '<button data-plan2="'+i+'">'+esc(p.nm)+'</button>'}).join('')+(si>0?'<button data-plan2="prev">'+si+'세트 그대로</button>':'')+'</span></div>';
-  document.getElementById('banner').innerHTML+=pb}
+ var fresh=!S.arr.length&&!c.over;document.querySelectorAll('.sb').forEach(function(x){x.classList.toggle('pickable',fresh)});
+ if(fresh){document.getElementById(st.first==='us'?'usSv':'thSv').textContent='🏐 첫 서브';document.getElementById(st.first==='us'?'thSv':'usSv').textContent='눌러서 첫 서브';
+  se.innerHTML+='<span style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap">'+D.plans.map(function(p,i){return '<button data-plan2="'+i+'" class="pq">'+esc(p.nm)+'</button>'}).join('')+(si>0?'<button data-plan2="prev" class="pq">'+si+'세트 그대로</button>':'')+'</span>'}
  // 서브 순서 줄
  document.getElementById('ordUs').innerHTML=st.order.map(function(sl,i){var n=L[sl];return '<span class="'+(sv.serving==='us'&&i===sv.iu?'now':'')+'"><small>'+(i+1)+'</small>'+esc(n||'?')+'</span>'}).join('');
  document.getElementById('ordTh').innerHTML=O.ord.map(function(n,i){return '<span class="'+(sv.serving==='them'&&i===sv.it?'now':'')+'"><small>'+(i+1)+'</small>'+(n?esc(n):'-')+'</span>'}).join('');
@@ -352,13 +353,14 @@ court.addEventListener('pointerup',endDrag);court.addEventListener('pointercance
 document.getElementById('tgBtn').onclick=function(){var c=calc(),sv=serveState(c.cur,c.sets[c.cur].arr);tgMode=!tgMode;if(tgMode&&sv.serving!=='them')say('지금은 우리 서브예요. 다음 상대 서버('+(serveState(c.cur,c.sets[c.cur].arr).it+1)+'번) 목적타로 저장돼요',true);render()};
 document.getElementById('flipBtn').onclick=function(){D.flip=!D.flip;save();say('코트 체인지: 우리 코트 '+(D.flip?'오른쪽':'왼쪽'),true);render()};
 document.getElementById('resetPos').onclick=function(){D.sets[calc().cur].pos=defPos();save();render()};
-document.getElementById('banner').addEventListener('click',function(e){var f=e.target.closest('[data-first]'),p=e.target.closest('[data-plan2]'),si=calc().cur;if(f){D.sets[si].first=f.dataset.first;save();render()}else if(p){if(p.dataset.plan2==='prev'){var pv=D.sets[si-1],st=D.sets[si];st.start=pv.start.slice();st.order=pv.order.slice();st.pos=JSON.parse(JSON.stringify(pv.pos));save();say(si+'세트 스타팅 그대로',true);render()}else applyPlan(+p.dataset.plan2)}});
+document.getElementById('serve').addEventListener('click',function(e){var f=e.target.closest('[data-first]'),p=e.target.closest('[data-plan2]'),si=calc().cur;if(f){D.sets[si].first=f.dataset.first;save();render()}else if(p){if(p.dataset.plan2==='prev'){var pv=D.sets[si-1],st=D.sets[si];st.start=pv.start.slice();st.order=pv.order.slice();st.pos=JSON.parse(JSON.stringify(pv.pos));save();say(si+'세트 스타팅 그대로',true);render()}else applyPlan(+p.dataset.plan2)}});
 document.getElementById('planBtns').onclick=function(e){var b=e.target.closest('[data-plan]');if(!b)return;applyPlan(+b.dataset.plan)};
 function applyPlan(i){var c=calc(),si=c.cur,pl=D.plans[i];if(pl.p.filter(Boolean).length<9){say(pl.nm+'에 9명이 다 안 들어가 있어요 (설정에서 채우기)');return}
  if(c.sets[si].arr.length||D.subs.some(function(x){return x.s===si})){if(!confirm('이번 세트에 점수나 교체 기록이 있어요. 그래도 '+pl.nm+'(으)로 스타팅을 바꿀까요? 이번 세트 교체 기록은 지워져요.'))return;D.subs=D.subs.filter(function(x){return x.s!==si})}
  var st=D.sets[si];st.start=pl.p.slice();st.order=orderFromPlan(pl);st.pos=JSON.parse(JSON.stringify(pl.pos));save();say(pl.nm+' 적용',true);render()}
 // 점수
 function addPt(w){if(WR)return;var c=calc();if(c.over)return;if(c.sets[c.cur].done){say('세트가 끝났어요. «다음 세트 시작»을 누르세요');return}D.pts.push({s:c.cur,w:w});save();render()}
+document.querySelectorAll('.sb').forEach(function(x){x.addEventListener('click',function(e){if(e.target.closest('button')||!x.classList.contains('pickable'))return;var si=calc().cur;D.sets[si].first=x.classList.contains('us')?'us':'them';save();render()})});
 document.getElementById('usPlus').onclick=function(){addPt('us')};document.getElementById('thPlus').onclick=function(){addPt('them')};
 document.getElementById('undo').onclick=function(){var c=calc();if(D.pts.length&&D.pts[D.pts.length-1].s===c.cur)D.pts.pop();else if(!c.sets[c.cur].arr.length&&D.sets.length>1&&!D.subs.some(function(x){return x.s===c.cur})){D.sets.pop()}save();render()};
 
