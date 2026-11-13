@@ -131,7 +131,7 @@ input{height:48px}
 .sb button{border:0;border-radius:14px;width:76px;height:64px;font-size:24px;font-weight:900;background:var(--blue);color:#fff;flex:0 0 auto}
 .sb.them button{background:var(--red)}
 .mid .prev{font-size:13px;margin:0}
-.board{display:grid;grid-template-columns:64px minmax(0,1fr) 64px;gap:6px;align-items:center;margin-top:8px}
+.board{display:grid;grid-template-columns:92px minmax(0,1fr) 92px;gap:6px;align-items:center;margin-top:8px}
 .fc{position:relative;height:calc(100vh - 230px);height:calc(100dvh - 230px);min-height:300px;width:100%;margin:0 auto;background:var(--court);border:4px solid #fff;border-radius:10px;touch-action:none;user-select:none;-webkit-user-select:none}
 .fc .half{position:absolute;top:0;bottom:0;width:50%}
 .fc .net{position:absolute;left:66%;top:-14px;bottom:-14px;width:10px;margin-left:-5px;background:repeating-linear-gradient(0deg,#fff 0 6px,#333 6px 12px);border:2px solid #fff;border-radius:4px;z-index:3;height:auto}
@@ -163,6 +163,8 @@ input{height:48px}
 .sb .sv{font-size:18px;font-weight:700;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sb .sv .big{font-size:30px;font-weight:900}.sb .sv .t2{font-size:15px;opacity:.75}.tgchip{border:0;border-radius:10px;padding:3px 10px;font-size:20px;font-weight:900;background:#e11d2e;color:#fff;display:inline-block}.sb button.tgchip{width:auto;height:auto;flex:none;background:#e11d2e;font-size:20px;padding:3px 10px;border-radius:10px;white-space:nowrap;vertical-align:middle}
 .planmid{display:flex;flex-direction:column;gap:4px}.planmid button{border:0;border-radius:10px;padding:5px 8px;font-size:14px;font-weight:900;background:var(--sky);color:var(--navy)}
 .top button.pt{background:#ffcf33;color:#14306b}
+.fc .chip.away{background:rgba(255,255,255,.15);border:3px dashed rgba(255,255,255,.9);box-shadow:none;color:#fff}.fc .chip.away i{color:#fff;font-size:15px}
+.srv.us span{width:90px;height:90px}.srv.us span b{font-size:34px;line-height:1}.srv.us span em{font-style:normal;font-size:13px;font-weight:700}
 .game2{display:grid;gap:12px;grid-template-columns:minmax(0,1fr);margin-top:12px}
 @media (min-width:900px){.game2{grid-template-columns:1fr 1fr}}
 @media (max-width:700px){.sb .pt{font-size:42px;min-width:50px}.sb button{width:56px;height:52px;font-size:20px}.board{grid-template-columns:40px minmax(0,1fr) 40px}.srv span{width:40px;height:40px;font-size:16px}.fc .chip{width:44px;height:44px;margin:-22px 0 0 -22px}.fc .chip b{font-size:18px}.fc .chip i,.fc .chip .o{display:none}.fc .oz{font-size:10px}}
@@ -331,10 +333,11 @@ function render(){var c=calc(),si=c.cur;while(D.sets.length<=si)D.sets.push(newS
  if(sv.serving==='them'){var t=O.tg[thSrvI];if(t){var tx=t.z!=null?ZP[t.z][0]:t.x,ty=t.z!=null?ZP[t.z][1]:t.y;h+='<div class="tg" style="left:'+fx((100-ty)*0.66)+'%;top:'+tx+'%"></div><div class="tgl" style="left:'+fx((100-ty)*0.66)+'%;top:'+tx+'%">🎯 #'+esc(thSrv||thSrvI+1)+(t.m?' '+esc(t.m):'')+'</div>'}}
  var subIn={};D.subs.forEach(function(x){if(x.s===si)subIn[x.inn]=1});
  L.forEach(function(n,sl){var p=st.pos[sl],oi=st.order.indexOf(sl);
+  var away=sv.serving==='us'&&sl===usSrvSlot;if(away){h+='<div class="chip away" data-sl="'+sl+'" style="left:'+fx((100-p.y)*0.66)+'%;top:'+p.x+'%"><i>서브 중</i><i>#'+esc(n||'?')+'</i></div>';return}
   h+='<div class="chip'+(sv.serving==='us'&&sl===usSrvSlot?' srv':'')+(subIn[n]&&st.start.indexOf(n)<0?' subin':'')+'" data-sl="'+sl+'" style="left:'+fx((100-p.y)*0.66)+'%;top:'+p.x+'%"><span class="o">'+(oi+1)+'</span><b>'+esc(n||'?')+'</b><i>'+esc(nmOf(n))+'</i></div>'});
  document.getElementById('court').innerHTML=h;
  var sl_=document.getElementById(D.flip?'srvR':'srvL'),sr_=document.getElementById(D.flip?'srvL':'srvR');document.querySelector('.sbar').classList.toggle('flip',!!D.flip);sl_.className='srv us';sr_.className='srv them';
- sl_.innerHTML=sv.serving==='us'?'<span><small>서브</small>'+esc(usSrv||'?')+'</span>':'';sr_.innerHTML=sv.serving==='them'?'<span><small>서브</small>'+esc(thSrv||'?')+'</span>':'';
+ sl_.innerHTML=sv.serving==='us'?'<span><small>서브</small><b>'+esc(usSrv||'?')+'</b><em>'+esc(nmOf(usSrv))+'</em></span>':'';sr_.innerHTML=sv.serving==='them'?'<span><small>서브</small>'+esc(thSrv||'?')+'</span>':'';
  document.getElementById('tgBtn').classList.toggle('on',tgMode);document.getElementById('tgBtn').textContent=tgMode?'코트를 눌러 목적타 위치 찍기 (#'+(thSrv||thSrvI+1)+')':'🎯 상대 목적타 찍기';
  document.getElementById('planBtns').innerHTML=D.plans.map(function(p,i){return '<button class="pl" data-plan="'+i+'">'+esc(p.nm)+' 적용</button>'}).join('');
  // 서브 정보는 점수판 안(서브하는 팀 칸)에
