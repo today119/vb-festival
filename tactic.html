@@ -114,7 +114,7 @@ input{height:48px}
 .chips2 button{border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:9px 16px;font-size:18px;font-weight:900}
 .chips2 button.on{background:var(--blue);border-color:var(--blue);color:#fff}
 .wr{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.wr input{width:150px;text-transform:uppercase;letter-spacing:2px;font-weight:900}
+.wr input{width:220px;text-transform:uppercase;letter-spacing:2px;font-weight:900}
 .pre{margin-top:8px;border:2.5px dashed var(--blue);border-radius:14px;padding:8px 12px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}.pre>b{font-size:19px;color:var(--navy)}.pre .chips2{margin:0}.pre .chips2 button{padding:7px 14px}.pre .pt2{font-size:20px;font-weight:900;color:var(--navy);margin-bottom:4px}.chips2 button.on.r{background:var(--red);border-color:var(--red)}
 .dot{display:inline-block;width:12px;height:12px;border-radius:50%;background:#94a3b8;margin-right:6px}
 .dot.on{background:#22c55e}
@@ -230,7 +230,7 @@ input{height:48px}
  <div class="card">
   <h2>📡 위리 점수 연결</h2>
   <div class="t">위리 경기 코드(6자리)를 넣으면 점수가 자동으로 따라와요. 이때 +1 버튼은 꺼져요.</div>
-  <div class="wr" style="margin-top:8px"><input id="wrCode" maxlength="6" placeholder="코드"><select id="wrSide" style="width:auto"><option value="home">우리 = 왼쪽(홈)</option><option value="away">우리 = 오른쪽(원정)</option></select></div>
+  <div class="wr" style="margin-top:8px"><input id="wrCode" maxlength="12" placeholder="코드 6자리" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" inputmode="text" style="width:220px"><select id="wrSide" style="width:auto"><option value="home">우리 = 왼쪽(홈)</option><option value="away">우리 = 오른쪽(원정)</option></select></div>
   <button class="btn" id="wrOn">연결</button><button class="btn r" id="wrOff">연결 끊고 직접 입력</button>
   <div class="t" id="wrStat" style="margin-top:8px"></div>
   <h3>경기 규칙</h3>
@@ -477,7 +477,7 @@ function wrPull(){var code=D.wr.code;Promise.all([fetch(RT+code+'/info.json').th
   foldWR(x[0],x[1]);var h=x[0].home||{},w=x[0].away||{};document.getElementById('wrStat').innerHTML='<span class="dot on"></span>연결됨 · '+esc(h.name||'홈')+' vs '+esc(w.name||'원정')+' · 이벤트 '+Object.keys(x[1]||{}).length+'개';render()}).catch(function(){document.getElementById('wrStat').textContent='⚠️ 연결 실패 (인터넷 확인)'})}
 function wrStart(){if(es){es.close();es=null}if(!/^[A-Z0-9]{6}$/.test(D.wr.code))return;wrPull();
  if(window.EventSource&&!/nosse/.test(location.search)){try{es=new EventSource(RT+D.wr.code+'/events.json');var t=null,f=function(){clearTimeout(t);t=setTimeout(wrPull,250)};es.addEventListener('put',f);es.addEventListener('patch',f)}catch(e){}}}
-document.getElementById('wrOn').onclick=function(){D.wr.code=document.getElementById('wrCode').value.trim().toUpperCase();D.wr.side=document.getElementById('wrSide').value;D.wr.firstSet=0;save();document.getElementById('wrStat').textContent='연결 중...';wrStart()};
+document.getElementById('wrOn').onclick=function(){var cv=document.getElementById('wrCode').value.toUpperCase().replace(/[^A-Z0-9]/g,'');document.getElementById('wrCode').value=cv;if(cv.length!==6){document.getElementById('wrStat').textContent='⚠️ 코드는 6자리예요 (지금 '+cv.length+'자리: '+cv+')';return}D.wr.code=cv;D.wr.side=document.getElementById('wrSide').value;D.wr.firstSet=0;save();document.getElementById('wrStat').textContent='연결 중...';wrStart()};
 document.getElementById('wrOff').onclick=function(){if(es){es.close();es=null}WR=null;D.wr.code='';save();document.getElementById('wrStat').textContent='직접 입력 모드';document.getElementById('wrCode').value='';render()};
 document.getElementById('wrCode').value=D.wr.code||'';document.getElementById('wrSide').value=D.wr.side||'home';
 render();BOOT=false;if(D.wr.code)wrStart();
