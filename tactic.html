@@ -43,7 +43,7 @@ h3{font-size:18px;font-weight:900;margin:14px 0 6px}
 .mid .sl{font-size:15px;color:var(--sub);font-weight:700;text-align:center}
 .mid button{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:8px 10px;font-size:15px;font-weight:700}
 .prev{font-size:15px;color:var(--sub);text-align:center;margin-top:6px}
-.serve{margin-top:10px;border-radius:14px;padding:12px 14px;font-size:20px;font-weight:900;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.serve{margin-top:8px;border-radius:14px;padding:8px 14px;font-size:20px;font-weight:900;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .serve.us{background:#fff6cc;color:#7a5a00}.serve.them{background:#ffe4e0;color:#9b1c1c}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .serve.us{background:#4a3c08;color:#ffe680}:root:not([data-theme="light"]) .serve.them{background:#4a2020;color:#ffb4b4}}
 :root[data-theme="dark"] .serve.us{background:#4a3c08;color:#ffe680}:root[data-theme="dark"] .serve.them{background:#4a2020;color:#ffb4b4}
@@ -115,52 +115,65 @@ input{height:48px}
 .chips2 button.on{background:var(--blue);border-color:var(--blue);color:#fff}
 .wr{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .wr input{width:150px;text-transform:uppercase;letter-spacing:2px;font-weight:900}
-.pre{margin-top:10px;border:2.5px dashed var(--blue);border-radius:14px;padding:12px}.pre .pt2{font-size:20px;font-weight:900;color:var(--navy);margin-bottom:4px}.chips2 button.on.r{background:var(--red);border-color:var(--red)}
+.pre{margin-top:8px;border:2.5px dashed var(--blue);border-radius:14px;padding:8px 12px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}.pre>b{font-size:19px;color:var(--navy)}.pre .chips2{margin:0}.pre .chips2 button{padding:7px 14px}.pre .pt2{font-size:20px;font-weight:900;color:var(--navy);margin-bottom:4px}.chips2 button.on.r{background:var(--red);border-color:var(--red)}
 .dot{display:inline-block;width:12px;height:12px;border-radius:50%;background:#94a3b8;margin-right:6px}
 .dot.on{background:#22c55e}
+
+.sbar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:stretch}
+.sb{display:flex;align-items:center;gap:10px;border-radius:16px;padding:8px 12px}
+.sb.us{background:#dbe7ff}.sb.them{background:#ffe4e0;justify-content:flex-end}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sb.us{background:#1d2f5c}:root:not([data-theme="light"]) .sb.them{background:#4a2020}}
+:root[data-theme="dark"] .sb.us{background:#1d2f5c}:root[data-theme="dark"] .sb.them{background:#4a2020}
+.sb .nmw{flex:1;min-width:0}.sb.them .nmw{text-align:right}
+.sb .nm{font-size:20px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb .sv{font-size:16px;font-weight:900;min-height:22px}
+.sb .pt{font-size:60px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums;min-width:76px;text-align:center}
+.sb button{border:0;border-radius:14px;width:76px;height:64px;font-size:24px;font-weight:900;background:var(--blue);color:#fff;flex:0 0 auto}
+.sb.them button{background:var(--red)}
+.mid .prev{font-size:13px;margin:0}
+.board{display:grid;grid-template-columns:64px minmax(0,1fr) 64px;gap:6px;align-items:center;margin-top:10px}
+.fc{position:relative;height:min(calc(100vh - 385px),calc((100vw - 190px) / 2));height:min(calc(100dvh - 385px),calc((100vw - 190px) / 2));min-height:150px;width:auto;aspect-ratio:2/1;margin:0 auto;background:var(--court);border:4px solid #fff;border-radius:10px;touch-action:none;user-select:none;-webkit-user-select:none}
+.fc .half{position:absolute;top:0;bottom:0;width:50%}
+.fc .net{position:absolute;left:50%;top:-14px;bottom:-14px;width:10px;margin-left:-5px;background:repeating-linear-gradient(0deg,#fff 0 6px,#333 6px 12px);border:2px solid #fff;border-radius:4px;z-index:3;height:auto}
+.fc .vl{position:absolute;top:0;bottom:0;border-left:2px dashed rgba(255,255,255,.55)}
+.fc .hl{position:absolute;left:0;width:50%;border-top:2px dashed rgba(255,255,255,.55)}
+.fc .oz{position:absolute;width:16.66%;height:33.33%;border:1px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:rgba(255,255,255,.85);text-align:center;cursor:pointer;background:var(--court2)}
+.fc .oz.hit{background:rgba(250,204,21,.85);color:#3d2e00;font-size:17px;font-weight:900}
+.fc .zl{font-size:12px}
+.srv{display:flex;align-items:center;justify-content:center;min-height:64px}
+.srv span{width:64px;height:64px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;font-size:24px;line-height:1}
+.srv span small{font-size:12px}
+.srv.us span{background:var(--yel);color:#3d2e00;box-shadow:0 0 0 5px rgba(250,204,21,.4)}
+.srv.them span{background:var(--red);color:#fff}
+.fc .chip{width:66px;height:66px;margin:-33px 0 0 -33px}
+.fc .chip b{font-size:27px}
+.benchbar{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.benchbar>b{font-size:18px;font-weight:900;color:var(--navy)}
+.benchbar .bench{margin:0;flex:1}
+.sbar.flip .sb.us{order:3;flex-direction:row-reverse}.sbar.flip .sb.them{order:1;flex-direction:row-reverse}.sbar.flip .mid{order:2}.sbar.flip .sb.us .nmw{text-align:right}.sbar.flip .sb.them .nmw{text-align:left}
+.game2{display:grid;gap:12px;grid-template-columns:minmax(0,1fr);margin-top:12px}
+@media (min-width:900px){.game2{grid-template-columns:1fr 1fr}}
+@media (max-width:700px){.sb .pt{font-size:42px;min-width:50px}.sb button{width:56px;height:52px;font-size:20px}.board{grid-template-columns:40px minmax(0,1fr) 40px}.srv span{width:40px;height:40px;font-size:16px}.fc .chip{width:44px;height:44px;margin:-22px 0 0 -22px}.fc .chip b{font-size:18px}.fc .chip i,.fc .chip .o{display:none}.fc .oz{font-size:10px}}
 </style></head><body>
 <div class="top"><h1 id="ttl">🏐 배구 작전판</h1><button data-v="game" class="on">경기</button><button data-v="setup">설정</button></div>
 <div class="page">
 
-<div id="vGame" class="game">
- <div>
-  <div class="card" style="padding:10px">
-   <div class="courtwrap">
-    <div class="opp" id="opp"></div>
-    <div class="net"></div>
-    <div class="court" id="court"></div>
-   </div>
-   <div class="tools">
-    <button id="tgBtn">🎯 목적타 찍기</button>
-    <button id="resetPos">↺ 기본 위치</button>
-    <span id="planBtns" style="display:contents"></span>
-   </div>
-  </div>
+<div id="vGame">
+ <div class="sbar">
+  <div class="sb us"><button id="usPlus">+1</button><div class="nmw"><div class="nm" id="usNm">우리</div><div class="sv" id="usSv"></div></div><div class="pt" id="usPt">0</div></div>
+  <div class="mid"><div class="sl" id="setLbl">1세트</div><div class="sets" id="sets">0 : 0</div><div class="prev" id="prev"></div><button id="undo">↶ 취소</button></div>
+  <div class="sb them"><div class="pt" id="thPt">0</div><div class="nmw"><div class="nm" id="thNm">상대</div><div class="sv" id="thSv"></div></div><button id="thPlus">+1</button></div>
  </div>
- <div>
-  <div class="card">
-   <div class="score">
-    <div class="side us"><div class="nm" id="usNm">우리</div><div class="pt" id="usPt">0</div><div class="sv" id="usSv"></div><button id="usPlus">+1</button></div>
-    <div class="mid"><div class="sl" id="setLbl">1세트</div><div class="sets" id="sets">0:0</div><button id="undo">↶ 취소</button></div>
-    <div class="side them"><div class="nm" id="thNm">상대</div><div class="pt" id="thPt">0</div><div class="sv" id="thSv"></div><button id="thPlus">+1</button></div>
-   </div>
-   <div class="prev" id="prev"></div>
-   <div class="t" id="wrInfo" style="text-align:center;margin-top:4px"></div>
-   <div class="serve" id="serve"></div>
-   <div id="banner"></div>
-  </div>
-  <div class="card" style="margin-top:12px">
-   <h2>서브 순서</h2>
-   <div class="t">우리</div><div class="order" id="ordUs"></div>
-   <div class="t" style="margin-top:8px">상대</div><div class="order them" id="ordTh"></div>
-  </div>
-  <div class="card" style="margin-top:12px">
-   <h2>교체 <span class="cnt" id="subCnt">0 / 6</span></h2>
-   <div class="t">벤치 선수를 누르고 → 코트에서 나갈 선수를 눌러요</div>
-   <div class="bench" id="bench"></div>
-   <div class="msg" id="msg"></div>
-   <div class="log" id="subLog"></div>
-  </div>
+ <div class="t" id="wrInfo" style="text-align:center"></div>
+ <div class="serve" id="serve"></div>
+ <div id="banner"></div>
+ <div class="board"><div class="srv" id="srvL"></div><div class="fc" id="court"></div><div class="srv" id="srvR"></div></div>
+ <div class="benchbar"><b>대기 선수</b><div class="bench" id="bench"></div><span class="cnt" id="subCnt">0 / 6</span></div>
+ <div class="msg" id="msg"></div>
+ <div class="tools"><button id="tgBtn">🎯 상대 목적타 찍기</button><button id="flipBtn">⇄ 코트 체인지</button><button id="resetPos">↺ 기본 위치</button><span id="planBtns" style="display:contents"></span></div>
+ <div class="game2">
+  <div class="card"><h2>서브 순서</h2><div class="t">우리</div><div class="order" id="ordUs"></div><div class="t" style="margin-top:8px">상대</div><div class="order them" id="ordTh"></div></div>
+  <div class="card"><h2>교체 기록</h2><div class="t">대기 선수를 누르고 → 코트에서 나갈 선수를 눌러요</div><div class="log" id="subLog"></div></div>
  </div>
 </div>
 
@@ -209,6 +222,8 @@ input{height:48px}
 var LS={get:function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 var ZN=['전위 레프트','전위 센터','전위 라이트','중위 레프트','중위 센터','중위 라이트','후위 레프트','후위 센터','후위 라이트'];
 var ZS=['전L','전C','전R','중L','중C','중R','후L','후C','후R'];
+function fx(X){return D.flip?100-X:X}
+var OZ=['앞 위','중간 위','뒤 위','앞 가운데','중간 가운데','뒤 가운데','앞 아래','중간 아래','뒤 아래'];
 var ZP=[[18,17],[50,17],[82,17],[18,50],[50,50],[82,50],[18,83],[50,83],[82,83]];
 function defPos(){return ZP.map(function(p){return {x:p[0],y:p[1]}})}
 function blankPlan(nm){return {nm:nm,p:['','','','','','','','',''],o:[1,2,3,4,5,6,7,8,9],pos:defPos()}}
@@ -256,30 +271,31 @@ function render(){var c=calc(),si=c.cur;while(D.sets.length<=si)D.sets.push(newS
  var usSrvSlot=st.order[sv.iu],usSrv=L[usSrvSlot],thSrvI=sv.it,thSrv=O.ord[thSrvI]||'';
  document.getElementById('usSv').textContent=sv.serving==='us'?'🏐 서브':'';document.getElementById('thSv').textContent=sv.serving==='them'?'🏐 서브':'';
  var se=document.getElementById('serve');se.className='serve '+sv.serving;
- if(sv.serving==='us')se.innerHTML='🏐 우리 서브 · <span style="font-size:28px">#'+esc(usSrv||'?')+'</span> <small>'+esc(nmOf(usSrv))+' (서브 '+(sv.iu+1)+'번)</small>';
+ if(sv.serving==='us'){var ot=(D.ourTg||{})[usSrv];se.innerHTML='🏐 우리 서브 · <span style="font-size:28px">#'+esc(usSrv||'?')+'</span> <small>'+esc(nmOf(usSrv))+' (서브 '+(sv.iu+1)+'번)'+(ot!=null?' → 🎯 상대 '+OZ[ot]:' · 상대 코트 칸을 누르면 목적타')+'</small>';}
  else{var tg=O.tg[thSrvI];se.innerHTML='⚠️ 상대 서브 · <span style="font-size:28px">'+(thSrv?'#'+esc(thSrv):(thSrvI+1)+'번 서버')+'</span>'+(tg?' <small>→ 🎯 '+esc(tg.z!=null?ZN[tg.z]:'코트 표시')+(tg.m?' · '+esc(tg.m):'')+'</small>':' <small>목적타 미설정</small>')}
  // 배너
- var bn='';if(c.over)bn='<div class="banner">경기 끝 · '+(c.usSets>c.thSets?'🎉 우리 승리':'상대 승리')+' ('+c.usSets+':'+c.thSets+')</div>';
- else if(S.done&&manual)bn='<div class="banner">'+(si+1)+'세트 끝 ('+S.us+'-'+S.th+')<button id="nextSet">'+(si+2)+'세트 시작</button></div>';
+ var bn='';var lastSet=si===rules(si).g*2-2;if(lastSet&&Math.max(S.us,S.th)===8&&!S.done)bn+='<div class="banner" style="background:var(--orange)">8점 · 코트 체인지 확인 (⇄ 버튼)</div>';if(c.over)bn+='<div class="banner">경기 끝 · '+(c.usSets>c.thSets?'🎉 우리 승리':'상대 승리')+' ('+c.usSets+':'+c.thSets+')</div>';
+ else if(S.done&&manual)bn+='<div class="banner">'+(si+1)+'세트 끝 ('+S.us+'-'+S.th+')<button id="nextSet">'+(si+2)+'세트 시작</button></div>';
  document.getElementById('banner').innerHTML=bn;var ns=document.getElementById('nextSet');if(ns)ns.onclick=function(){D.sets.push(newSet(D.sets[si]));save();render();scrollTo(0,0)};
  // 세트 시작 전 체크 (0:0일 때)
- if(!S.arr.length&&!c.over){var pb='<div class="pre"><div class="pt2">'+(si+1)+'세트 시작 전 체크</div><div class="t">첫 서브</div><div class="chips2"><button data-first="us" class="'+(st.first==='us'?'on':'')+'">🏐 우리 서브</button><button data-first="them" class="'+(st.first==='them'?'on r':'')+'">상대 서브</button></div>';
-  pb+='<div class="t" style="margin-top:8px">스타팅 · 서브 순서</div><div class="chips2">'+D.plans.map(function(p,i){return '<button data-plan2="'+i+'">'+esc(p.nm)+'</button>'}).join('')+(si>0?'<button data-plan2="prev">'+si+'세트 그대로</button>':'')+'</div>';
-  pb+='<div class="t" style="margin-top:8px">우리 서브 순서: '+st.order.map(function(sl,i){return (i+1)+'번 #'+esc(L[sl]||'?')}).join(' · ')+'</div></div>';
+ if(!S.arr.length&&!c.over){var pb='<div class="pre"><b>'+(si+1)+'세트 시작 전</b><span class="t">첫 서브</span><span class="chips2"><button data-first="us" class="'+(st.first==='us'?'on':'')+'">🏐 우리</button><button data-first="them" class="'+(st.first==='them'?'on r':'')+'">상대</button></span>';
+  pb+='<span class="t">스타팅</span><span class="chips2">'+D.plans.map(function(p,i){return '<button data-plan2="'+i+'">'+esc(p.nm)+'</button>'}).join('')+(si>0?'<button data-plan2="prev">'+si+'세트 그대로</button>':'')+'</span></div>';
   document.getElementById('banner').innerHTML+=pb}
  // 서브 순서 줄
  document.getElementById('ordUs').innerHTML=st.order.map(function(sl,i){var n=L[sl];return '<span class="'+(sv.serving==='us'&&i===sv.iu?'now':'')+'"><small>'+(i+1)+'</small>'+esc(n||'?')+'</span>'}).join('');
  document.getElementById('ordTh').innerHTML=O.ord.map(function(n,i){return '<span class="'+(sv.serving==='them'&&i===sv.it?'now':'')+'"><small>'+(i+1)+'</small>'+(n?esc(n):'-')+'</span>'}).join('');
- // 코트
- var oh='<span>'+esc(O.nm||'상대')+'</span>';if(sv.serving==='them')oh+='<span style="background:var(--red);border-radius:10px;padding:2px 10px">서브 #'+esc(thSrv||'?')+'</span>';document.getElementById('opp').innerHTML=oh;
- var h='<div class="ln" style="top:33.3%"></div><div class="ln" style="top:66.6%"></div>';
- ZP.forEach(function(p,i){h+='<div class="zl" style="left:'+p[0]+'%;top:'+(p[1]-12)+'%">'+ZN[i]+'</div>'});
- if(sv.serving==='them'){var t=O.tg[thSrvI];if(t){var tx=t.z!=null?ZP[t.z][0]:t.x,ty=t.z!=null?ZP[t.z][1]:t.y;h+='<div class="tg" style="left:'+tx+'%;top:'+ty+'%"></div><div class="tgl" style="left:'+tx+'%;top:'+ty+'%">🎯 #'+esc(thSrv||thSrvI+1)+(t.m?' '+esc(t.m):'')+'</div>'}}
+ // 코트 (가로: 왼쪽 우리, 오른쪽 상대)
+ var h='<div class="vl" style="left:16.66%"></div><div class="vl" style="left:33.33%"></div><div class="net"></div>';
+ var ourNext=sv.serving==='us'?usSrv:L[st.order[(sv.iuRaw+1+9)%9]],T=D.ourTg||{},tz=T[ourNext];
+ OZ.forEach(function(z,k){var c=k%3,r=Math.floor(k/3);h+='<div class="oz'+(tz===k?' hit':'')+'" data-oz2="'+k+'" style="left:'+fx(D.flip?50+(c+1)*16.66:50+c*16.66)+'%;top:'+(r*33.33)+'%">'+(tz===k?'🎯 #'+esc(ourNext):z)+'</div>'});
+ if(sv.serving==='them'){var t=O.tg[thSrvI];if(t){var tx=t.z!=null?ZP[t.z][0]:t.x,ty=t.z!=null?ZP[t.z][1]:t.y;h+='<div class="tg" style="left:'+fx((100-ty)/2)+'%;top:'+tx+'%"></div><div class="tgl" style="left:'+fx((100-ty)/2)+'%;top:'+tx+'%">🎯 #'+esc(thSrv||thSrvI+1)+(t.m?' '+esc(t.m):'')+'</div>'}}
  var subIn={};D.subs.forEach(function(x){if(x.s===si)subIn[x.inn]=1});
  L.forEach(function(n,sl){var p=st.pos[sl],oi=st.order.indexOf(sl);
-  h+='<div class="chip'+(sv.serving==='us'&&sl===usSrvSlot?' srv':'')+(subIn[n]&&st.start.indexOf(n)<0?' subin':'')+'" data-sl="'+sl+'" style="left:'+p.x+'%;top:'+p.y+'%"><span class="o">'+(oi+1)+'</span><b>'+esc(n||'?')+'</b><i>'+esc(nmOf(n))+'</i></div>'});
+  h+='<div class="chip'+(sv.serving==='us'&&sl===usSrvSlot?' srv':'')+(subIn[n]&&st.start.indexOf(n)<0?' subin':'')+'" data-sl="'+sl+'" style="left:'+fx((100-p.y)/2)+'%;top:'+p.x+'%"><span class="o">'+(oi+1)+'</span><b>'+esc(n||'?')+'</b><i>'+esc(nmOf(n))+'</i></div>'});
  document.getElementById('court').innerHTML=h;
- document.getElementById('tgBtn').classList.toggle('on',tgMode);document.getElementById('tgBtn').textContent=tgMode?'코트를 눌러 목적타 위치 찍기 (#'+(thSrv||thSrvI+1)+')':'🎯 목적타 찍기';
+ var sl_=document.getElementById(D.flip?'srvR':'srvL'),sr_=document.getElementById(D.flip?'srvL':'srvR');document.querySelector('.sbar').classList.toggle('flip',!!D.flip);sl_.className='srv us';sr_.className='srv them';
+ sl_.innerHTML=sv.serving==='us'?'<span><small>서브</small>'+esc(usSrv||'?')+'</span>':'';sr_.innerHTML=sv.serving==='them'?'<span><small>서브</small>'+esc(thSrv||'?')+'</span>':'';
+ document.getElementById('tgBtn').classList.toggle('on',tgMode);document.getElementById('tgBtn').textContent=tgMode?'코트를 눌러 목적타 위치 찍기 (#'+(thSrv||thSrvI+1)+')':'🎯 상대 목적타 찍기';
  document.getElementById('planBtns').innerHTML=D.plans.map(function(p,i){return '<button class="pl" data-plan="'+i+'">'+esc(p.nm)+' 적용</button>'}).join('');
  renderBench(si,L)}
 function subInfo(si){var st=D.sets[si],list=D.subs.filter(function(x){return x.s===si});return {st:st,list:list}}
@@ -307,15 +323,18 @@ document.getElementById('bench').onclick=function(e){var b=e.target.closest('[da
 document.getElementById('subLog').onclick=function(e){if(!e.target.closest('[data-undosub]'))return;var si=calc().cur;for(var i=D.subs.length-1;i>=0;i--)if(D.subs[i].s===si){D.subs.splice(i,1);break}save();render()};
 // 코트 끌기 / 교체 / 목적타
 var drag=null,court=document.getElementById('court');
-court.addEventListener('pointerdown',function(e){var si=calc().cur,r=court.getBoundingClientRect();
- if(tgMode){var x=Math.round((e.clientX-r.left)/r.width*100),y=Math.round((e.clientY-r.top)/r.height*100),c=calc(),sv=serveState(si,c.sets[si].arr),O=opp(),k=sv.it;O.tg[k]={x:x,y:y,z:null,m:(O.tg[k]&&O.tg[k].m)||''};tgMode=false;save();say('상대 '+(O.ord[k]?'#'+O.ord[k]:(k+1)+'번 서버')+' 목적타 저장',true);render();return}
+court.addEventListener('pointerdown',function(e){var si=calc().cur,r=court.getBoundingClientRect(),X=fx((e.clientX-r.left)/r.width*100),Y=(e.clientY-r.top)/r.height*100;
+ var oz=e.target.closest('[data-oz2]');
+ if(oz&&!tgMode){var c=calc(),S=c.sets[si],sv=serveState(si,S.arr),L=lineup(si),st=D.sets[si],who=sv.serving==='us'?L[st.order[sv.iu]]:L[st.order[(sv.iuRaw+1+9)%9]];if(!who)return;D.ourTg=D.ourTg||{};var k=+oz.dataset.oz2;if(D.ourTg[who]===k)delete D.ourTg[who];else D.ourTg[who]=k;save();say('우리 #'+who+' 서브 목적타: '+(D.ourTg[who]!=null?'상대 '+OZ[k]:'지움'),true);render();return}
+ if(tgMode){if(X>50){say('상대 목적타는 우리 코트(왼쪽)에 찍어요');return}var c2=calc(),sv2=serveState(si,c2.sets[si].arr),O=opp(),kk=sv2.it;O.tg[kk]={x:Math.round(Y),y:Math.round(100-X*2),z:null,m:(O.tg[kk]&&O.tg[kk].m)||''};tgMode=false;save();say('상대 '+(O.ord[kk]?'#'+O.ord[kk]:(kk+1)+'번 서버')+' 목적타 저장',true);render();return}
  var ch=e.target.closest('.chip');if(!ch)return;var sl=+ch.dataset.sl;
- if(pickBench){var why=canSub(si,sl,pickBench);if(why){say(why);return}var L=lineup(si),c2=calc();D.subs.push({s:si,slot:sl,out:L[sl],inn:pickBench,at:c2.sets[si].us+'-'+c2.sets[si].th});say('#'+L[sl]+' → #'+pickBench+' 교체',true);pickBench=null;save();render();return}
+ if(pickBench){var why=canSub(si,sl,pickBench);if(why){say(why);return}var L2=lineup(si),c3=calc();D.subs.push({s:si,slot:sl,out:L2[sl],inn:pickBench,at:c3.sets[si].us+'-'+c3.sets[si].th});say('#'+L2[sl]+' → #'+pickBench+' 교체',true);pickBench=null;save();render();return}
  drag={sl:sl,el:ch,r:r,moved:false};ch.setPointerCapture(e.pointerId);ch.style.zIndex=5;e.preventDefault()});
-court.addEventListener('pointermove',function(e){if(!drag)return;var x=Math.min(96,Math.max(4,(e.clientX-drag.r.left)/drag.r.width*100)),y=Math.min(96,Math.max(4,(e.clientY-drag.r.top)/drag.r.height*100));drag.el.style.left=x+'%';drag.el.style.top=y+'%';drag.x=x;drag.y=y;drag.moved=true});
+court.addEventListener('pointermove',function(e){if(!drag)return;var X=Math.min(48,Math.max(2,fx((e.clientX-drag.r.left)/drag.r.width*100))),Y=Math.min(95,Math.max(5,(e.clientY-drag.r.top)/drag.r.height*100));drag.el.style.left=fx(X)+'%';drag.el.style.top=Y+'%';drag.x=Y;drag.y=100-X*2;drag.moved=true});
 function endDrag(){if(!drag)return;if(drag.moved){var st=D.sets[calc().cur];st.pos[drag.sl]={x:Math.round(drag.x),y:Math.round(drag.y)};save()}drag=null;render()}
 court.addEventListener('pointerup',endDrag);court.addEventListener('pointercancel',endDrag);
 document.getElementById('tgBtn').onclick=function(){var c=calc(),sv=serveState(c.cur,c.sets[c.cur].arr);tgMode=!tgMode;if(tgMode&&sv.serving!=='them')say('지금은 우리 서브예요. 다음 상대 서버('+(serveState(c.cur,c.sets[c.cur].arr).it+1)+'번) 목적타로 저장돼요',true);render()};
+document.getElementById('flipBtn').onclick=function(){D.flip=!D.flip;save();say('코트 체인지: 우리 코트 '+(D.flip?'오른쪽':'왼쪽'),true);render()};
 document.getElementById('resetPos').onclick=function(){D.sets[calc().cur].pos=defPos();save();render()};
 document.getElementById('banner').addEventListener('click',function(e){var f=e.target.closest('[data-first]'),p=e.target.closest('[data-plan2]'),si=calc().cur;if(f){D.sets[si].first=f.dataset.first;save();render()}else if(p){if(p.dataset.plan2==='prev'){var pv=D.sets[si-1],st=D.sets[si];st.start=pv.start.slice();st.order=pv.order.slice();st.pos=JSON.parse(JSON.stringify(pv.pos));save();say(si+'세트 스타팅 그대로',true);render()}else applyPlan(+p.dataset.plan2)}});
 document.getElementById('planBtns').onclick=function(e){var b=e.target.closest('[data-plan]');if(!b)return;applyPlan(+b.dataset.plan)};
