@@ -329,13 +329,13 @@ function clinch(g,offOnly){var codes=Object.keys(T).filter(function(c){return c[
   var arr=codes.slice().sort(function(x,y){return W[y]-W[x]});
   arr.forEach(function(c,i){var r=i+1,uniq=(i===0||W[arr[i-1]]!==W[c])&&(i===arr.length-1||W[arr[i+1]]!==W[c]);var v=uniq?c:'?';fix[r]=(fix[r]===undefined)?v:(fix[r]===v?v:'?')})}
  var out={};Object.keys(fix).forEach(function(r){if(fix[r]!=='?')out[r]=fix[r]});return out}
-function seedOf(g,r){var sd=standings(g);if(sd.done)return sd.arr[r-1].c;return clinch(g)[r]||null}
+function seedOf(g,r){var sd=standings(g);if(sd.done)return sd.arr[r-1].c;var c=clinch(g)[r];if(c)return c;var t=sd.arr[r-1];return t&&t.pl?t.c:null}
 function sl(g,r){var l=g+'조 '+r+'위',sd=standings(g),t=sd.arr[r-1];if(!t||!t.pl)return l;return l+' · 현재 '+T[t.c].replace(/\(.*\)/,'')}
 function koMatch(id,label,a,b,la,lb){
  var w=K[id];if(w&&w!==a&&w!==b){delete K[id];w=null}
  var ow=(a&&b)?KOR[a+'|'+b]:null;if(ow)w=ow;
  function btn(c,l){if(!c)return '<button disabled>'+l+'</button>';return '<button data-ko="'+id+'|'+c+'" class="'+(w===c?'w ':'')+(c===ME?'me':'')+'">'+T[c]+(function(){var q=/^([A-E])조 (\d)위/.exec(l);if(!q)return '';var g=q[1],r=+q[2],tag;
-  if(clinch(g,true)[r]===c)tag='확정';else if(G[g].every(function(m,i){return O[g+':'+i]}))tag='세트득실 기준';else tag='예상';
+  if(clinch(g,true)[r]===c)tag='확정';else if(G[g].every(function(m,i){return O[g+':'+i]}))tag='세트득실 기준';else if(standings(g).done||clinch(g)[r]===c)tag='예상';else tag='현재 · 미확정';
   return '<small class="sd'+(tag==='확정'?' ok':'')+'">'+g+'조 '+r+'위 '+tag+'</small>'})()+'</button>'}
  return{h:'<div class="m"><div class="mh"><span>'+label+'</span>'+(ow?'<b class="ob">공식</b>':'')+'</div>'+btn(a,la)+btn(b,lb)+'</div>',w:(a&&b)?w:null};
 }
