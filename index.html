@@ -68,6 +68,7 @@ tr.me td.l{color:var(--blue)}
 .m .mh{font-size:12px;color:var(--sub);background:var(--bg);padding:4px 10px;display:flex;justify-content:space-between}
 .m button{display:flex;width:100%;border:0;border-top:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:14px;padding:9px 10px;text-align:left;cursor:pointer;gap:6px;align-items:center}
 .m button:first-of-type{border-top:0}
+.m button .sd{margin-left:auto;font-size:11px;color:var(--sub);font-weight:600}.m button .sd.ok{color:var(--wint)}
 .m button.w{background:var(--win);color:var(--wint);font-weight:900}
 .m button.w:after{content:'승';margin-left:auto;font-size:11px;background:var(--wint);color:var(--card);border-radius:6px;padding:0 6px}
 .m button.me{color:var(--blue);font-weight:700}
@@ -295,7 +296,8 @@ function standings(g){
  function ratio(x,y){return y?x/y:(x?1e9:0)}
  function h2h(x,y){var res=0;G[g].forEach(function(m,i){var r=result(g+':'+i);if(!r.done)return;
   if(m[1]===x.c&&m[2]===y.c)res=r.w[0]>r.w[1]?-1:1;if(m[1]===y.c&&m[2]===x.c)res=r.w[1]>r.w[0]?-1:1});return res}
- arr.sort(function(x,y){return (y.W-x.W)||(ratio(y.PF,y.PA)-ratio(x.PF,x.PA))||(ratio(y.SW,y.SL)-ratio(x.SW,x.SL))||h2h(x,y)||x.c.localeCompare(y.c)});
+ var hasPts=G[g].every(function(m,i){var r=result(g+':'+i);return !r.done||(r.p[0]+r.p[1]>0)});
+ arr.sort(function(x,y){return (y.W-x.W)||(hasPts?(ratio(y.PF,y.PA)-ratio(x.PF,x.PA)):0)||(ratio(y.SW,y.SL)-ratio(x.SW,x.SL))||h2h(x,y)||x.c.localeCompare(y.c)});
  var done=G[g].every(function(m,i){return result(g+':'+i).done});
  return{arr:arr,done:done};
 }
@@ -320,21 +322,31 @@ function renderGroups(){
   h+='</table>'+(sd.done?'':'<div class="t" style="margin-top:6px">경기가 다 입력되면 진출 순위가 확정돼요</div>')+'</div>'});
  document.getElementById('groups').innerHTML=h;
 }
-function seedOf(g,r){var sd=standings(g);return sd.done?sd.arr[r-1].c:null}
+// 남은 경기를 승/패로 모두 따져서 승수만으로 그 순위가 갈리면 '확정'(동률은 세트·점수에 따라 바뀌니 확정 아님)
+function clinch(g,offOnly){var codes=Object.keys(T).filter(function(c){return c[0]===g}),W0={},rem=[];codes.forEach(function(c){W0[c]=0});
+ G[g].forEach(function(m,i){var k=g+':'+i,r=offOnly?(O[k]?{done:true,w:O[k]}:{done:false}):result(k);if(r.done)W0[r.w[0]>r.w[1]?m[1]:m[2]]++;else rem.push(m)});
+ var fix={};for(var b=0;b<(1<<rem.length);b++){var W=Object.assign({},W0);rem.forEach(function(m,j){W[(b>>j)&1?m[1]:m[2]]++});
+  var arr=codes.slice().sort(function(x,y){return W[y]-W[x]});
+  arr.forEach(function(c,i){var r=i+1,uniq=(i===0||W[arr[i-1]]!==W[c])&&(i===arr.length-1||W[arr[i+1]]!==W[c]);var v=uniq?c:'?';fix[r]=(fix[r]===undefined)?v:(fix[r]===v?v:'?')})}
+ var out={};Object.keys(fix).forEach(function(r){if(fix[r]!=='?')out[r]=fix[r]});return out}
+function seedOf(g,r){var sd=standings(g);if(sd.done)return sd.arr[r-1].c;return clinch(g)[r]||null}
+function sl(g,r){var l=g+'조 '+r+'위',sd=standings(g),t=sd.arr[r-1];if(!t||!t.pl)return l;return l+' · 현재 '+T[t.c].replace(/\(.*\)/,'')}
 function koMatch(id,label,a,b,la,lb){
  var w=K[id];if(w&&w!==a&&w!==b){delete K[id];w=null}
  var ow=(a&&b)?KOR[a+'|'+b]:null;if(ow)w=ow;
- function btn(c,l){if(!c)return '<button disabled>'+l+'</button>';return '<button data-ko="'+id+'|'+c+'" class="'+(w===c?'w ':'')+(c===ME?'me':'')+'">'+T[c]+'</button>'}
+ function btn(c,l){if(!c)return '<button disabled>'+l+'</button>';return '<button data-ko="'+id+'|'+c+'" class="'+(w===c?'w ':'')+(c===ME?'me':'')+'">'+T[c]+(function(){var q=/^([A-E])조 (\d)위/.exec(l);if(!q)return '';var g=q[1],r=+q[2],tag;
+  if(clinch(g,true)[r]===c)tag='확정';else if(G[g].every(function(m,i){return O[g+':'+i]}))tag='세트득실 기준';else tag='예상';
+  return '<small class="sd'+(tag==='확정'?' ok':'')+'">'+g+'조 '+r+'위 '+tag+'</small>'})()+'</button>'}
  return{h:'<div class="m"><div class="mh"><span>'+label+'</span>'+(ow?'<b class="ob">공식</b>':'')+'</div>'+btn(a,la)+btn(b,lb)+'</div>',w:(a&&b)?w:null};
 }
 function renderKO(){
  var h='',A1=seedOf('A',1),A2=seedOf('A',2),B1=seedOf('B',1),B2=seedOf('B',2),C1=seedOf('C',1),C2=seedOf('C',2),D1=seedOf('D',1),D2=seedOf('D',2),E1=seedOf('E',1),E2=seedOf('E',2);
- var m10a=koMatch('t10a','10강1 · 11.15(일) 제9경기 · 남성고',D2,E2,'D조 2위','E조 2위');
- var m10b=koMatch('t10b','10강2 · 11.15(일) 제10경기 · 남성고',E1,C2,'E조 1위','C조 2위');
- var q1=koMatch('q1','8강1 · 11.15(일) 제11경기 · 남성고',A1,B2,'A조 1위','B조 2위');
- var q2=koMatch('q2','8강2 · 11.15(일) 제12경기 · 남성고',B1,A2,'B조 1위','A조 2위');
- var q3=koMatch('q3','8강3 · 11.16(월) 제1경기 · 익산실내',C1,m10a.w,'C조 1위','10강1 승자');
- var q4=koMatch('q4','8강4 · 11.16(월) 제2경기 · 익산실내',D1,m10b.w,'D조 1위','10강2 승자');
+ var m10a=koMatch('t10a','10강1 · 11.15(일) 제9경기 · 남성고',D2,E2,sl('D',2),sl('E',2));
+ var m10b=koMatch('t10b','10강2 · 11.15(일) 제10경기 · 남성고',E1,C2,sl('E',1),sl('C',2));
+ var q1=koMatch('q1','8강1 · 11.15(일) 제11경기 · 남성고',A1,B2,sl('A',1),sl('B',2));
+ var q2=koMatch('q2','8강2 · 11.15(일) 제12경기 · 남성고',B1,A2,sl('B',1),sl('A',2));
+ var q3=koMatch('q3','8강3 · 11.16(월) 제1경기 · 익산실내',C1,m10a.w,sl('C',1),'10강1 승자');
+ var q4=koMatch('q4','8강4 · 11.16(월) 제2경기 · 익산실내',D1,m10b.w,sl('D',1),'10강2 승자');
  var s1=koMatch('s1','준결승1 · 11.16(월) 제3경기',q1.w,q3.w,'8강1 승자','8강3 승자');
  var s2=koMatch('s2','준결승2 · 11.16(월) 제4경기',q2.w,q4.w,'8강2 승자','8강4 승자');
  var f=koMatch('f','결승 · 11.16(월) 제9경기',s1.w,s2.w,'준결승1 승자','준결승2 승자');
