@@ -231,7 +231,7 @@ input{height:48px}
  </div>
  <div class="card">
   <h2>📡 위리 점수 연결</h2>
-  <div class="t">위리 경기 코드(6자리)를 넣으면 점수가 자동으로 따라와요. 이때 +1 버튼은 꺼져요.</div>
+  <div class="t">위리 경기 코드(6자리)를 넣으면 점수가 양쪽으로 이어져요. 위리에서 누른 점수는 여기로, 여기서 누른 +1·취소는 위리 중계 화면으로 가요.</div>
   <div class="wr" style="margin-top:8px"><input id="wrCode" maxlength="12" placeholder="코드 6자리" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" inputmode="text" style="width:220px"><select id="wrSide" style="width:auto"><option value="home">우리 = 왼쪽(홈)</option><option value="away">우리 = 오른쪽(원정)</option></select></div>
   <button class="btn" id="wrOn">연결</button><button class="btn r" id="wrOff">연결 끊고 직접 입력</button>
   <div class="t" id="wrStat" style="margin-top:8px"></div>
@@ -312,7 +312,7 @@ function render(){var c=calc(),si=c.cur;while(D.sets.length<=si)D.sets.push(newS
  document.getElementById('sets').textContent=c.usSets+' : '+c.thSets;
  document.getElementById('setLbl').textContent=(si+1)+'세트 · '+rules(si).tgt+'점';
  document.getElementById('prev').textContent=c.sets.slice(0,si).map(function(x,i){return (i+1)+'세트 '+x.us+'-'+x.th}).join(' · ');
- var manual=!WR;['usPlus','thPlus','undo'].forEach(function(id){document.getElementById(id).hidden=!manual});
+ var manual=!WR;['usPlus','thPlus','undo'].forEach(function(id){document.getElementById(id).hidden=false});
  document.getElementById('wrInfo').innerHTML=WR?'<span class="dot on"></span>위리 '+esc(D.wr.code)+' 점수 연결 중':'';
  var usSrvSlot=st.order[sv.iu],usSrv=L[usSrvSlot],thSrvI=sv.it,thSrv=O.ord[thSrvI]||'';
  document.getElementById('usSv').textContent=sv.serving==='us'?'🏐 서브':'';document.getElementById('thSv').textContent=sv.serving==='them'?'🏐 서브':'';
@@ -397,10 +397,10 @@ function applyPlan(i){var c=calc(),si=c.cur,pl=D.plans[i];if(pl.p.filter(Boolean
  if(c.sets[si].arr.length||D.subs.some(function(x){return x.s===si})){if(!confirm('이번 세트에 점수나 교체 기록이 있어요. 그래도 '+pl.nm+'(으)로 스타팅을 바꿀까요? 이번 세트 교체 기록은 지워져요.'))return;D.subs=D.subs.filter(function(x){return x.s!==si})}
  var st=D.sets[si];st.start=pl.p.slice();st.order=orderFromPlan(pl);st.pos=JSON.parse(JSON.stringify(pl.pos));save();say(pl.nm+' 적용'+(pl.memo?' · '+pl.memo.split('\n')[0]:''),true);render()}
 // 점수
-function addPt(w){if(WR)return;var c=calc();if(c.over)return;if(c.sets[c.cur].done){say('세트가 끝났어요. «다음 세트 시작»을 누르세요');return}D.pts.push({s:c.cur,w:w});save();render()}
+function addPt(w){if(WR){wrSend(w);return}var c=calc();if(c.over)return;if(c.sets[c.cur].done){say('세트가 끝났어요. «다음 세트 시작»을 누르세요');return}D.pts.push({s:c.cur,w:w});save();render()}
 document.querySelectorAll('.sb').forEach(function(x){x.addEventListener('click',function(e){if(e.target.closest('button')||!x.classList.contains('pickable'))return;var si=calc().cur;D.sets[si].first=x.classList.contains('us')?'us':'them';save();render()})});
 document.getElementById('usPlus').onclick=function(){addPt('us')};document.getElementById('thPlus').onclick=function(){addPt('them')};
-document.getElementById('undo').onclick=function(){var c=calc();if(D.pts.length&&D.pts[D.pts.length-1].s===c.cur)D.pts.pop();else if(!c.sets[c.cur].arr.length&&D.sets.length>1&&!D.subs.some(function(x){return x.s===c.cur})){D.sets.pop()}save();render()};
+document.getElementById('undo').onclick=function(){if(WR){wrUndo();return}var c=calc();if(D.pts.length&&D.pts[D.pts.length-1].s===c.cur)D.pts.pop();else if(!c.sets[c.cur].arr.length&&D.sets.length>1&&!D.subs.some(function(x){return x.s===c.cur})){D.sets.pop()}save();render()};
 
 // ---- 목적타 크게 보기 ----
 var ZW=null;function openZoom(who){ZW=who;var z=document.getElementById('zoom'),k=(D.ourTg||{})[who],h='<div class="zg'+(D.flip?' fl':'')+'">';
@@ -467,8 +467,9 @@ if(/^#imp=/.test(location.hash)){var z=document.getElementById('zoom');z.innerHT
 var RT='https://matchmaker-28187-default-rtdb.asia-southeast1.firebasedatabase.app/wereplay/',es=null;
 function foldWR(info,events){var us=D.wr.side,ev=Object.keys(events||{}).map(function(k){var e=events[k];e._k=k;return e}).sort(function(a,b){return a.at-b.at});
  var undone={};ev.forEach(function(e){if(e.kind&&e.kind.t==='undo')undone[e.kind.ref]=1});
- var tmp={rules:info&&info.rules,pts:[],closed:{}};WR=tmp;var s=0,a=0,b=0;
+ var tmp={rules:info&&info.rules,pts:[],closed:{},live:[]};WR=tmp;var s=0,a=0,b=0;
  ev.forEach(function(e){var k=e.kind||{};if(undone[e._k]||undone[e.id]||k.t==='undo')return;
+  if(k.t==='point'||k.t==='add')tmp.live.push(e);
   if(k.t==='point'||k.t==='add'){var w=k.side===us?'us':'them',v=k.t==='add'?(k.v||1):1;for(var i=0;i<v;i++){tmp.pts.push({s:s,w:w});if(w==='us')a++;else b++}
    if(setWon(a,b,s)||setWon(b,a,s)){s++;a=0;b=0}}
   else if(k.t==='next'){if(a||b){tmp.closed[s]=1;s++;a=0;b=0}}
@@ -479,6 +480,11 @@ function foldWR(info,events){var us=D.wr.side,ev=Object.keys(events||{}).map(fun
 function wrPull(){var code=D.wr.code;Promise.all([fetch(RT+code+'/info.json').then(function(r){return r.json()}),fetch(RT+code+'/events.json').then(function(r){return r.json()})]).then(function(x){
   if(!x[0]){document.getElementById('wrStat').textContent='⚠️ 그런 경기 코드가 없어요';return}
   foldWR(x[0],x[1]);var h=x[0].home||{},w=x[0].away||{};document.getElementById('wrStat').innerHTML='<span class="dot on"></span>연결됨 · '+esc(h.name||'홈')+' vs '+esc(w.name||'원정')+' · 이벤트 '+Object.keys(x[1]||{}).length+'개';render()}).catch(function(){document.getElementById('wrStat').textContent='⚠️ 연결 실패 (인터넷 확인)'})}
+function wrId(){return 'e'+Date.now().toString(36)+Math.floor(Math.random()*4294967295).toString(36)}
+function wrPut(kind){var id=wrId(),ev={id:id,at:Date.now()/1000,device:'tactic',kind:kind};
+ return fetch(RT+D.wr.code+'/events/'+id+'.json',{method:'PUT',body:JSON.stringify(ev)}).then(function(r){if(!r.ok)throw 0;wrPull()}).catch(function(){say('⚠️ 위리로 못 보냈어요 (인터넷 확인)')})}
+function wrSend(w){if(!WR)return;var c=calc();if(c.over)return;var us=D.wr.side,side=w==='us'?us:(us==='home'?'away':'home');wrPut({t:'point',side:side})}
+function wrUndo(){if(!WR||!WR.live.length)return;wrPut({t:'undo',ref:WR.live[WR.live.length-1].id||WR.live[WR.live.length-1]._k})}
 function wrStart(){if(es){es.close();es=null}if(!/^[A-Z0-9]{6}$/.test(D.wr.code))return;wrPull();
  if(window.EventSource&&!/nosse/.test(location.search)){try{es=new EventSource(RT+D.wr.code+'/events.json');var t=null,f=function(){clearTimeout(t);t=setTimeout(wrPull,250)};es.addEventListener('put',f);es.addEventListener('patch',f)}catch(e){}}}
 document.getElementById('wrOn').onclick=function(){var cv=document.getElementById('wrCode').value.toUpperCase().replace(/[^A-Z0-9]/g,'');document.getElementById('wrCode').value=cv;if(cv.length!==6){document.getElementById('wrStat').textContent='⚠️ 코드는 6자리예요 (지금 '+cv.length+'자리: '+cv+')';return}D.wr.code=cv;D.wr.side=document.getElementById('wrSide').value;D.wr.firstSet=0;save();document.getElementById('wrStat').textContent='연결 중...';wrStart()};
