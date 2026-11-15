@@ -43,6 +43,8 @@ h3{font-size:15px;font-weight:900;margin:14px 0 6px}
 /* 시뮬레이터 */
 .grp{margin-top:14px}
 .gm{border-top:1px solid var(--line);padding:10px 0}
+.ob{display:inline-block;background:#1d4ed8;color:#fff;font-size:11px;padding:1px 6px;border-radius:6px;margin-left:4px}
+.offst{background:var(--sky);color:var(--ink);border-radius:10px;padding:8px 10px;margin:6px 0;font-size:14px;line-height:1.5}.offst span{font-size:12px;color:var(--sub)}.offst a{color:var(--blue)}
 .gm:first-of-type{border-top:0}
 .gm .hd{display:flex;justify-content:space-between;font-size:12px;color:var(--sub)}
 .gm .tm{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 8px;align-items:center;margin-top:4px}
@@ -206,6 +208,7 @@ details.mo{border:1.5px dashed var(--line);border-radius:12px;padding:6px 10px;m
 
 <section class="tab" id="sim">
  <div class="card"><h2>🔮 결과 입력 · 진출 예상</h2>
+  <div id="offStat" class="offst"></div>
   <div class="t">조별 경기 세트 점수를 넣으면 순위가 자동으로 계산돼요. 빠른 버튼(2:0 등)은 예상용 점수를 채워요. 토너먼트는 이길 팀을 누르세요.</div>
   <div class="btns"><button id="mine">우리 조만 보기</button><button id="reset">초기화</button></div>
  </div>
@@ -269,8 +272,20 @@ var S=LS.get('vbf_scores',{}); // key "D:0" -> [[a,b],[a,b],[a,b]]
 var K=LS.get('vbf_ko',{});     // match id -> winner seed code
 var onlyMine=LS.get('vbf_mine',false);
 
+// ---- 공식 결과(학교스포츠클럽포털 집계 · 체육창고 경유, 맥이 매시 official.json 갱신) ----
+var O={},KOR={},OFF=null;
+function canon(t){return String(t||'').replace(/\(.*?\)/g,'').replace(/\s/g,'').replace(/등학교$/,'').replace('여자상업고','여상').replace('여자고','여고').replace('공업고','공고')}
+var CODE={};Object.keys(T).forEach(function(c){CODE[canon(T[c])]=c});
+function applyOff(j){O={};KOR={};OFF=j;Object.keys(j.games||{}).forEach(function(id){var v=j.games[id];if(!v.done||v.sa==null)return;
+ var a=CODE[canon(v.a)],b=CODE[canon(v.b)];if(!a||!b)return;var hit=false;
+ Object.keys(G).forEach(function(g){G[g].forEach(function(m,i){if(m[1]===a&&m[2]===b){O[g+':'+i]=[+v.sa,+v.sb];hit=true}else if(m[1]===b&&m[2]===a){O[g+':'+i]=[+v.sb,+v.sa];hit=true}})});
+ if(!hit){var w=+v.sa>+v.sb?a:b;KOR[a+'|'+b]=w;KOR[b+'|'+a]=w}})}
+function loadOff(){fetch('official.json?t='+Date.now()).then(function(r){return r.ok?r.json():null}).then(function(j){if(j){applyOff(j);LS.set('vbf_off',j);render()}}).catch(function(){})}
+(function(){var j=LS.get('vbf_off',null);if(j)applyOff(j)})();
 function setsOf(k){return (S[k]||[]).filter(function(s){return s&&s[0]!==''&&s[1]!==''&&s[0]!=null&&s[1]!=null&&!(+s[0]===0&&+s[1]===0)})}
-function result(k){var w=[0,0],p=[0,0];setsOf(k).forEach(function(s){var a=+s[0],b=+s[1];p[0]+=a;p[1]+=b;if(a>b)w[0]++;else if(b>a)w[1]++});return{w:w,p:p,done:w[0]===2||w[1]===2}}
+function result(k){var w=[0,0],p=[0,0];setsOf(k).forEach(function(s){var a=+s[0],b=+s[1];p[0]+=a;p[1]+=b;if(a>b)w[0]++;else if(b>a)w[1]++});
+ if(O[k]){var o=O[k];if(w[0]!==o[0]||w[1]!==o[1])p=[0,0];return{w:o.slice(),p:p,done:true,off:true}}
+ return{w:w,p:p,done:w[0]===2||w[1]===2}}
 function standings(g){
  var st={};Object.keys(T).filter(function(c){return c[0]===g}).forEach(function(c){st[c]={c:c,W:0,L:0,PF:0,PA:0,SW:0,SL:0,pl:0}});
  G[g].forEach(function(m,i){var r=result(g+':'+i);if(!r.done)return;var a=st[m[1]],b=st[m[2]];
@@ -293,7 +308,7 @@ function renderGroups(){
   var sd=standings(g),n=G[g].length===3?3:4;
   h+='<div class="card grp"><h2>'+g+'조 '+(n===3?'(3팀)':'(4팀)')+(g==='D'?' 💙':'')+'</h2>';
   G[g].forEach(function(m,i){var k=g+':'+i,r=result(k),v=S[k]||[];
-   h+='<div class="gm"><div class="hd"><span>'+m[0]+'</span><span>'+(r.done?('세트 '+r.w[0]+' : '+r.w[1]):'')+'</span></div><div class="tm">';
+   h+='<div class="gm'+(r.off?' off':'')+'"><div class="hd"><span>'+m[0]+'</span><span>'+(r.done?((r.off?'<b class="ob">공식</b> ':'')+'세트 '+r.w[0]+' : '+r.w[1]):'')+'</span></div><div class="tm">';
    [1,2].forEach(function(side){var c=m[side],cls='nm'+(c===ME?' me':'')+(r.done&&r.w[side-1]===2?' w':'');
     h+='<div class="'+cls+'">'+T[c]+'</div><div class="sets">';
     for(var s=0;s<3;s++){var val=v[s]&&v[s][side-1]!=null?v[s][side-1]:'';h+='<input inputmode="numeric" maxlength="2" data-k="'+k+'" data-s="'+s+'" data-side="'+(side-1)+'" value="'+val+'" placeholder="'+(s+1)+'S">'}
@@ -301,15 +316,16 @@ function renderGroups(){
    h+='</div><div class="qk">'+[[2,0],[2,1],[1,2],[0,2]].map(function(q){return '<button data-q="'+k+'|'+q[0]+'|'+q[1]+'">'+q[0]+':'+q[1]+'</button>'}).join('')+'<button data-q="'+k+'|x">지우기</button></div></div>'});
   h+='<table><tr><th>순위</th><th style="text-align:left">팀</th><th>승패</th><th>득실점률</th><th>세트</th></tr>';
   sd.arr.forEach(function(t,i){var q=(i===0)?'q1':(i===1?'q2':'');
-   h+='<tr class="'+(t.c===ME?'me':'')+'"><td><span class="rk '+(sd.done?q:'')+'">'+(i+1)+'</span></td><td class="l">'+T[t.c]+'</td><td>'+t.W+'승 '+t.L+'패</td><td>'+(t.PA?(t.PF/t.PA).toFixed(3):(t.PF?'-':'0'))+'</td><td>'+t.SW+':'+t.SL+'</td></tr>'});
+   h+='<tr class="'+(t.c===ME?'me':'')+'"><td><span class="rk '+(sd.done?q:'')+'">'+(i+1)+'</span></td><td class="l">'+T[t.c]+'</td><td>'+t.W+'승 '+t.L+'패</td><td>'+(t.PA?(t.PF/t.PA).toFixed(3):'-')+'</td><td>'+t.SW+':'+t.SL+'</td></tr>'});
   h+='</table>'+(sd.done?'':'<div class="t" style="margin-top:6px">경기가 다 입력되면 진출 순위가 확정돼요</div>')+'</div>'});
  document.getElementById('groups').innerHTML=h;
 }
 function seedOf(g,r){var sd=standings(g);return sd.done?sd.arr[r-1].c:null}
 function koMatch(id,label,a,b,la,lb){
  var w=K[id];if(w&&w!==a&&w!==b){delete K[id];w=null}
+ var ow=(a&&b)?KOR[a+'|'+b]:null;if(ow)w=ow;
  function btn(c,l){if(!c)return '<button disabled>'+l+'</button>';return '<button data-ko="'+id+'|'+c+'" class="'+(w===c?'w ':'')+(c===ME?'me':'')+'">'+T[c]+'</button>'}
- return{h:'<div class="m"><div class="mh"><span>'+label+'</span></div>'+btn(a,la)+btn(b,lb)+'</div>',w:(a&&b)?w:null};
+ return{h:'<div class="m"><div class="mh"><span>'+label+'</span>'+(ow?'<b class="ob">공식</b>':'')+'</div>'+btn(a,la)+btn(b,lb)+'</div>',w:(a&&b)?w:null};
 }
 function renderKO(){
  var h='',A1=seedOf('A',1),A2=seedOf('A',2),B1=seedOf('B',1),B2=seedOf('B',2),C1=seedOf('C',1),C2=seedOf('C',2),D1=seedOf('D',1),D2=seedOf('D',2),E1=seedOf('E',1),E2=seedOf('E',2);
@@ -326,7 +342,11 @@ function renderKO(){
  if(f.w)h+='<div class="champ">🏆 우승 예상: '+T[f.w]+(f.w===ME?' 💙🎉':'')+'</div>';
  document.getElementById('ko').innerHTML=h;
 }
-function render(){renderGroups();renderKO();document.getElementById('mine').textContent=onlyMine?'전체 조 보기':'우리 조만 보기'}
+function renderOff(){var e=document.getElementById('offStat');if(!e)return;if(!OFF){e.innerHTML='📡 공식 결과 불러오는 중...';return}
+ var d=OFF.fetchedAt?new Date(OFF.fetchedAt):null,n=Object.keys(O).length;
+ e.innerHTML='📡 <b>공식 결과 자동 반영</b> · '+(d?(d.getMonth()+1)+'/'+d.getDate()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+' 기준':'')+' · 조별 '+n+'경기<br><span>10~20시 매시·24시 갱신 · 출처 학교스포츠클럽포털(<a href="https://www.musuldo.co.kr/sports_club.html" target="_blank" rel="noopener">체육창고</a> 집계) · 공식은 세트 수만 있어 승패가 같으면 세트득실로 순위를 봐요</span>'}
+function render(){renderOff();renderGroups();renderKO();document.getElementById('mine').textContent=onlyMine?'전체 조 보기':'우리 조만 보기'}
+loadOff();setInterval(loadOff,300000);document.addEventListener('visibilitychange',function(){if(!document.hidden)loadOff()});
 document.getElementById('groups').addEventListener('input',function(e){var i=e.target;if(!i.dataset.k)return;var k=i.dataset.k,s=+i.dataset.s,sd=+i.dataset.side;
  S[k]=S[k]||[];S[k][s]=S[k][s]||['',''];S[k][s][sd]=i.value.replace(/\D/g,'');LS.set('vbf_scores',S);clearTimeout(window._t);window._t=setTimeout(function(){var f=document.activeElement,id=f&&f.dataset&&f.dataset.k?[f.dataset.k,f.dataset.s,f.dataset.side]:null;render();if(id){var n=document.querySelector('input[data-k="'+id[0]+'"][data-s="'+id[1]+'"][data-side="'+id[2]+'"]');if(n){n.focus();var l=n.value.length;n.setSelectionRange(l,l)}}},600)});
 document.getElementById('groups').addEventListener('click',function(e){var q=e.target.dataset.q;if(!q)return;var p=q.split('|');if(p[1]==='x'){delete S[p[0]];save()}else quick(p[0],+p[1],+p[2])});
